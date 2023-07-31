@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewDownloadViewController">
+            <connections>
+                <outlet property="cancelButton" destination="n02-FF-Bi8" id="0V7-J0-CeP"/>
+                <outlet property="indicatorView" destination="ehs-nR-eON" id="U8l-Jb-QE6"/>
+                <outlet property="startDownloadButton" destination="Pyj-Yc-jE5" id="WD2-Lv-mMs"/>
+                <outlet property="textField" destination="uzK-bH-4gh" id="9K2-1e-Mud"/>
+                <outlet property="titleLabel" destination="REc-BA-7Hw" id="SAe-JS-4lU"/>
+                <outlet property="view" destination="Roj-pf-6An" id="Bek-kz-QUP"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Roj-pf-6An">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your URL to download" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uzK-bH-4gh">
+                    <rect key="frame" x="20" y="369" width="353" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="Iay-9s-pnt"/>
+                    </connections>
+                </textField>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="33" translatesAutoresizingMaskIntoConstraints="NO" id="TJy-kU-Owx">
+                    <rect key="frame" x="20" y="419" width="353" height="40"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyj-Yc-jE5">
+                            <rect key="frame" x="0.0" y="0.0" width="160" height="40"/>
+                            <color key="backgroundColor" systemColor="tintColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="Bvq-22-ir5"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Start Download">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <state key="disabled">
+                                <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="downloadButtonTapped" destination="-1" eventType="touchUpInside" id="PCW-nP-3yX"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n02-FF-Bi8">
+                            <rect key="frame" x="193" y="0.0" width="160" height="40"/>
+                            <color key="backgroundColor" systemColor="tintColor"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelButtonTapped" destination="-1" eventType="touchUpInside" id="0wH-Rd-H8S"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Download" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REc-BA-7Hw">
+                    <rect key="frame" x="137" y="83" width="119" height="20.333333333333329"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ehs-nR-eON">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </activityIndicatorView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="SPE-RP-ZCG"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="SPE-RP-ZCG" firstAttribute="trailing" secondItem="uzK-bH-4gh" secondAttribute="trailing" constant="20" id="9lE-L8-2ps"/>
+                <constraint firstItem="REc-BA-7Hw" firstAttribute="centerX" secondItem="Roj-pf-6An" secondAttribute="centerX" id="D5d-WJ-iUi"/>
+                <constraint firstItem="uzK-bH-4gh" firstAttribute="centerX" secondItem="Roj-pf-6An" secondAttribute="centerX" id="Hdf-lt-TeU"/>
+                <constraint firstItem="ehs-nR-eON" firstAttribute="top" secondItem="Roj-pf-6An" secondAttribute="top" id="KH5-sU-dQb"/>
+                <constraint firstItem="uzK-bH-4gh" firstAttribute="centerY" secondItem="Roj-pf-6An" secondAttribute="centerY" constant="-40" id="Ocr-UV-ifi"/>
+                <constraint firstItem="uzK-bH-4gh" firstAttribute="leading" secondItem="SPE-RP-ZCG" secondAttribute="leading" constant="20" id="XdU-iJ-NWQ"/>
+                <constraint firstItem="ehs-nR-eON" firstAttribute="leading" secondItem="SPE-RP-ZCG" secondAttribute="leading" id="ZVY-15-bgn"/>
+                <constraint firstItem="TJy-kU-Owx" firstAttribute="leading" secondItem="SPE-RP-ZCG" secondAttribute="leading" constant="20" id="cau-3l-uKX"/>
+                <constraint firstItem="TJy-kU-Owx" firstAttribute="top" secondItem="uzK-bH-4gh" secondAttribute="bottom" constant="16" id="ckU-OV-hKO"/>
+                <constraint firstAttribute="bottom" secondItem="ehs-nR-eON" secondAttribute="bottom" id="dRt-59-i29"/>
+                <constraint firstItem="SPE-RP-ZCG" firstAttribute="trailing" secondItem="ehs-nR-eON" secondAttribute="trailing" id="luQ-MX-XUA"/>
+                <constraint firstItem="REc-BA-7Hw" firstAttribute="top" secondItem="SPE-RP-ZCG" secondAttribute="top" constant="24" id="uBM-ln-yqi"/>
+                <constraint firstAttribute="trailing" secondItem="TJy-kU-Owx" secondAttribute="trailing" constant="20" id="y5V-gV-DwZ"/>
+            </constraints>
+            <point key="canvasLocation" x="-244" y="-35"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -19,12 +19,15 @@ class DownloadManagerViewController: UIViewController {
     }
     
     private func configureUI() {
+        title = "Download Manager"
         let nib = UINib(nibName: String(describing: DownloadCell.self), bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: String(describing: DownloadCell.self))
     }
     
     @IBAction private func onAddDownloadButtonTapped() {
-        
+        let newDownloadVC = NewDownloadViewController()
+        newDownloadVC.titleLabelText = "New Download"
+        present(newDownloadVC, animated: true)
     }
 }
 
