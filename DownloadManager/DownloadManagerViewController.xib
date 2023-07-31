@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DownloadManagerViewController" customModule="DownloadManager" customModuleProvider="target">
+            <connections>
+                <outlet property="addDownloadButton" destination="hoI-KU-7ja" id="Mfd-C1-cu8"/>
+                <outlet property="tableView" destination="eXQ-yK-POG" id="jMJ-Lb-czU"/>
+                <outlet property="view" destination="Xvf-mO-0te" id="2IG-Y9-ck1"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Xvf-mO-0te">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="eXQ-yK-POG">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="cYg-kG-MSe"/>
+                        <outlet property="delegate" destination="-1" id="lzA-bG-qbx"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gbb-fp-Lsx">
+                    <rect key="frame" x="327" y="752" width="50" height="50"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hoI-KU-7ja">
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal">
+                                <imageReference key="image" image="plus" catalog="system" symbolScale="large"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="bold"/>
+                            </state>
+                            <connections>
+                                <action selector="onAddDownloadButtonTapped" destination="-1" eventType="touchUpInside" id="gNu-3S-BaS"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="tintColor"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="3rP-hx-VQC"/>
+                        <constraint firstAttribute="height" constant="50" id="R5L-4q-VNa"/>
+                        <constraint firstItem="hoI-KU-7ja" firstAttribute="leading" secondItem="gbb-fp-Lsx" secondAttribute="leading" id="cZx-1T-3GE"/>
+                        <constraint firstAttribute="trailing" secondItem="hoI-KU-7ja" secondAttribute="trailing" id="cyV-5v-0s6"/>
+                        <constraint firstAttribute="bottom" secondItem="hoI-KU-7ja" secondAttribute="bottom" id="ndb-FO-giB"/>
+                        <constraint firstItem="hoI-KU-7ja" firstAttribute="top" secondItem="gbb-fp-Lsx" secondAttribute="top" id="wAp-KP-Ua7"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="25"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="nzJ-bV-vh8"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="bottom" secondItem="nzJ-bV-vh8" secondAttribute="bottom" id="2x9-bV-IUi"/>
+                <constraint firstItem="nzJ-bV-vh8" firstAttribute="trailing" secondItem="eXQ-yK-POG" secondAttribute="trailing" id="6Bs-gs-Iuu"/>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="top" secondItem="nzJ-bV-vh8" secondAttribute="top" id="NVO-lF-AJ1"/>
+                <constraint firstItem="nzJ-bV-vh8" firstAttribute="bottom" secondItem="gbb-fp-Lsx" secondAttribute="bottom" constant="16" id="OcC-VM-pDc"/>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="leading" secondItem="nzJ-bV-vh8" secondAttribute="leading" id="Tyi-v4-4O9"/>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="top" secondItem="nzJ-bV-vh8" secondAttribute="top" id="eJJ-Tk-3LF"/>
+                <constraint firstItem="nzJ-bV-vh8" firstAttribute="bottom" secondItem="eXQ-yK-POG" secondAttribute="bottom" id="gL9-Iu-PWM"/>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="trailing" secondItem="nzJ-bV-vh8" secondAttribute="trailing" id="iMm-6h-fqr"/>
+                <constraint firstItem="nzJ-bV-vh8" firstAttribute="trailing" secondItem="gbb-fp-Lsx" secondAttribute="trailing" constant="16" id="nN1-hN-v50"/>
+                <constraint firstItem="eXQ-yK-POG" firstAttribute="leading" secondItem="nzJ-bV-vh8" secondAttribute="leading" id="vyf-kH-14Z"/>
+            </constraints>
+            <point key="canvasLocation" x="202" y="-28"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

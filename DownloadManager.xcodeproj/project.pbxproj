@@ -12,6 +12,8 @@
 		E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5132A77BF730075D1D6 /* ViewController.swift */; };
 		E43ED5192A77BF750075D1D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E43ED5182A77BF750075D1D6 /* Assets.xcassets */; };
 		E43ED51C2A77BF750075D1D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E43ED51A2A77BF750075D1D6 /* LaunchScreen.storyboard */; };
+		E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5242A77BFCC0075D1D6 /* DownloadManagerViewController.swift */; };
+		E43ED5282A77C0060075D1D6 /* DownloadManagerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E43ED5272A77C0060075D1D6 /* DownloadManagerViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		E43ED5182A77BF750075D1D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E43ED51B2A77BF750075D1D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E43ED51D2A77BF750075D1D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E43ED5242A77BFCC0075D1D6 /* DownloadManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewController.swift; sourceTree = "<group>"; };
+		E43ED5272A77C0060075D1D6 /* DownloadManagerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadManagerViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 		E43ED50E2A77BF730075D1D6 /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				E43ED5262A77BFE00075D1D6 /* Views */,
+				E43ED5232A77BFB80075D1D6 /* Controllers */,
 				E43ED50F2A77BF730075D1D6 /* AppDelegate.swift */,
 				E43ED5112A77BF730075D1D6 /* SceneDelegate.swift */,
 				E43ED5132A77BF730075D1D6 /* ViewController.swift */,
@@ -62,6 +68,22 @@
 				E43ED51D2A77BF750075D1D6 /* Info.plist */,
 			);
 			path = DownloadManager;
+			sourceTree = "<group>";
+		};
+		E43ED5232A77BFB80075D1D6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E43ED5242A77BFCC0075D1D6 /* DownloadManagerViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		E43ED5262A77BFE00075D1D6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E43ED5272A77C0060075D1D6 /* DownloadManagerViewController.xib */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,6 +146,7 @@
 			files = (
 				E43ED51C2A77BF750075D1D6 /* LaunchScreen.storyboard in Resources */,
 				E43ED5192A77BF750075D1D6 /* Assets.xcassets in Resources */,
+				E43ED5282A77C0060075D1D6 /* DownloadManagerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
 				E43ED5122A77BF730075D1D6 /* SceneDelegate.swift in Sources */,
