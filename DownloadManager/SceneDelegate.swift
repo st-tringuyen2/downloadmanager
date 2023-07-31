@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         let vc = DownloadManagerViewController()
+        vc.downloadList = DownloadCellModel.dumyList
         navigationController = UINavigationController(rootViewController: vc)
         
         window?.rootViewController = navigationController

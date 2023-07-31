@@ -11,6 +11,8 @@ class DownloadManagerViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     @IBOutlet private var addDownloadButton: UIButton!
     
+    var downloadList = [DownloadCellModel]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -28,11 +30,13 @@ class DownloadManagerViewController: UIViewController {
 
 extension DownloadManagerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return downloadList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DownloadCell.self)) as! DownloadCell
+        let model = downloadList[indexPath.row]
+        cell.updateUI(with: model)
         
         return cell
     }
