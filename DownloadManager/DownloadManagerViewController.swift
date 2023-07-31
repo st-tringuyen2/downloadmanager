@@ -11,6 +11,16 @@ class DownloadManagerViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     @IBOutlet private var addDownloadButton: UIButton!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureUI()
+    }
+    
+    private func configureUI() {
+        let nib = UINib(nibName: String(describing: DownloadCell.self), bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: String(describing: DownloadCell.self))
+    }
+    
     @IBAction private func onAddDownloadButtonTapped() {
         
     }
@@ -22,7 +32,8 @@ extension DownloadManagerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DownloadCell.self)) as! DownloadCell
+        
+        return cell
     }
 }
