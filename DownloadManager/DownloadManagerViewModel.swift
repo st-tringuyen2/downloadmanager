@@ -9,6 +9,12 @@ import Foundation
 
 class DownloadManagerViewModel {
     private var downloadList = [DownloadCellModel]()
+    
+    private let downloader: Downloader
+    
+    init(downloader: Downloader) {
+        self.downloader = downloader
+    }
 
     var numbersOfItems: Int {
         return downloadList.count
@@ -16,5 +22,11 @@ class DownloadManagerViewModel {
     
     func item(for index: Int) -> DownloadCellModel {
         return downloadList[index]
+    }
+}
+
+extension DownloadManagerViewModel {
+    func download(from fileMetaData: FileMetaData) {
+        downloader.download(from: fileMetaData)
     }
 }
