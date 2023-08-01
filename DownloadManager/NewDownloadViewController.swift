@@ -52,7 +52,7 @@ class NewDownloadViewController: UIViewController {
         titleLabel.text = titleLabelText
     }
     
-    private func mapMetaData(from result: Result<String, Error>) {
+    private func handleMetaDataResult(_ result: Result<String, Error>) {
         DispatchQueue.main.async { [weak self] in
             self?.indicatorView.stopAnimating()
             switch result {
@@ -69,7 +69,7 @@ class NewDownloadViewController: UIViewController {
         textField.endEditing(true)
         indicatorView.startAnimating()
         viewModel.getMetaData(from: url) { [weak self] result in
-            self?.mapMetaData(from: result)
+            self?.handleMetaDataResult(result)
         }
     }
     
