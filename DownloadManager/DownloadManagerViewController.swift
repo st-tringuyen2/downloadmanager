@@ -11,7 +11,16 @@ class DownloadManagerViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     @IBOutlet private var addDownloadButton: UIButton!
     
-    var downloadList = [DownloadCellModel]()
+    private var viewModel: DownloadManagerViewModel
+    
+    init(viewModel: DownloadManagerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,12 +42,12 @@ class DownloadManagerViewController: UIViewController {
 
 extension DownloadManagerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadList.count
+        return viewModel.numbersOfItems
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DownloadCell.self)) as! DownloadCell
-        let model = downloadList[indexPath.row]
+        let model = viewModel.item(for: indexPath.row)
         cell.updateUI(with: model)
         
         return cell

@@ -16,9 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let vc = DownloadManagerViewController()
-        vc.downloadList = DownloadCellModel.dumyList
-        navigationController = UINavigationController(rootViewController: vc)
+        let downloadManagerViewController = DownloadManagerComposer.makeDownloadManagerViewController()
+        navigationController = UINavigationController(rootViewController: downloadManagerViewController)
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

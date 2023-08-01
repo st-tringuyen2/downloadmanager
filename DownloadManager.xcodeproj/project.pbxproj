@@ -18,6 +18,8 @@
 		E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED52B2A77C8780075D1D6 /* DownloadCell.swift */; };
 		E43ED52F2A77E9330075D1D6 /* NewDownloadViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E43ED52E2A77E9330075D1D6 /* NewDownloadViewController.xib */; };
 		E43ED5312A77E9A90075D1D6 /* NewDownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5302A77E9A90075D1D6 /* NewDownloadViewController.swift */; };
+		E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */; };
+		E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		E43ED52B2A77C8780075D1D6 /* DownloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		E43ED52E2A77E9330075D1D6 /* NewDownloadViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewDownloadViewController.xib; sourceTree = "<group>"; };
 		E43ED5302A77E9A90075D1D6 /* NewDownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDownloadViewController.swift; sourceTree = "<group>"; };
+		E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewModel.swift; sourceTree = "<group>"; };
+		E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerComposer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +70,10 @@
 		E43ED50E2A77BF730075D1D6 /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				E43ED5352A789C9E0075D1D6 /* UI Composers */,
 				E43ED5262A77BFE00075D1D6 /* Views */,
 				E43ED5232A77BFB80075D1D6 /* Controllers */,
+				E43ED5322A7898DE0075D1D6 /* View Models */,
 				E43ED50F2A77BF730075D1D6 /* AppDelegate.swift */,
 				E43ED5112A77BF730075D1D6 /* SceneDelegate.swift */,
 				E43ED5132A77BF730075D1D6 /* ViewController.swift */,
@@ -104,6 +110,22 @@
 				E43ED52B2A77C8780075D1D6 /* DownloadCell.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		E43ED5322A7898DE0075D1D6 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */,
+			);
+			name = "View Models";
+			sourceTree = "<group>";
+		};
+		E43ED5352A789C9E0075D1D6 /* UI Composers */ = {
+			isa = PBXGroup;
+			children = (
+				E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */,
+			);
+			name = "UI Composers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,6 +203,8 @@
 			files = (
 				E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */,
 				E43ED5312A77E9A90075D1D6 /* NewDownloadViewController.swift in Sources */,
+				E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */,
+				E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
 				E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */,
