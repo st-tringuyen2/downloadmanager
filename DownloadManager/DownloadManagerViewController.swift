@@ -7,51 +7,6 @@
 
 import UIKit
 
-public struct HTTPRangeRequestHeader: Hashable {
-    let start: Int
-    let end: Int
-}
-
-protocol Downloader {
-    func download(from fileMetaData: FileMetaData)
-}
-
-class FileDownloader: Downloader {
-    private var numbersOfDownloadPart: Int {
-        return 8
-    }
-    
-    private var downloadList = [FileMetaData]()
-    private var downloadPartLocations = [UUID: [URL]]()
-    private var rangeRequests = [UUID: [HTTPRangeRequestHeader]]()
-    
-    func download(from fileMetaData: FileMetaData) {
-        createRange(from: fileMetaData)
-    }
-    
-    private func createRange(from fileMetaData: FileMetaData) {
-        let sizeOfPart = fileMetaData.size / numbersOfDownloadPart
-        
-        guard sizeOfPart > 0 else { return }
-        
-        var startRange = 0
-        var endRange = 0
-        var ranges = [HTTPRangeRequestHeader]()
-        var partLocations = [URL]()
-        
-        for i in 0..<numbersOfDownloadPart {
-            let saveLocation = fileMetaData.saveLocation.appendingPathComponent(".part\(i)")
-            partLocations.append(saveLocation)
-            endRange += (sizeOfPart - 1)
-            let range = HTTPRangeRequestHeader(start: startRange, end: i == numbersOfDownloadPart - 1 ? fileMetaData.size : endRange - 1)
-            ranges.append(range)
-            startRange = endRange
-        }
-        downloadPartLocations[fileMetaData.id] = partLocations
-        rangeRequests[fileMetaData.id] = ranges
-    }
-}
-
 class DownloadManagerViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     @IBOutlet private var addDownloadButton: UIButton!

@@ -21,6 +21,8 @@
 		E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */; };
 		E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */; };
 		E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */; };
+		E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51C2A793B10002314C7 /* Downloader.swift */; };
+		E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewModel.swift; sourceTree = "<group>"; };
 		E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerComposer.swift; sourceTree = "<group>"; };
 		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; };
+		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 		E43ED50E2A77BF730075D1D6 /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				E4D5A51B2A793AFD002314C7 /* Feature */,
 				E43ED5352A789C9E0075D1D6 /* UI Composers */,
 				E43ED5262A77BFE00075D1D6 /* Views */,
 				E43ED5232A77BFB80075D1D6 /* Controllers */,
@@ -129,6 +134,15 @@
 				E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */,
 			);
 			name = "UI Composers";
+			sourceTree = "<group>";
+		};
+		E4D5A51B2A793AFD002314C7 /* Feature */ = {
+			isa = PBXGroup;
+			children = (
+				E4D5A51C2A793B10002314C7 /* Downloader.swift */,
+				E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */,
+			);
+			name = Feature;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,12 +218,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */,
 				E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */,
 				E43ED5312A77E9A90075D1D6 /* NewDownloadViewController.swift in Sources */,
 				E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */,
 				E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
+				E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */,
 				E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */,
 				E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */,
 				E43ED5122A77BF730075D1D6 /* SceneDelegate.swift in Sources */,
