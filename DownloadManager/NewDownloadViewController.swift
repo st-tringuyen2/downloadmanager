@@ -57,8 +57,7 @@ class NewDownloadViewController: UIViewController {
             self?.indicatorView.stopAnimating()
             switch result {
             case let .success(fileName):
-                print(fileName)
-                self?.dismiss(animated: true)
+                self?.createEmptyFile(with: fileName)
             case let .failure(error):
                 print("Get metadata fail with error \(error)")
             }
@@ -83,6 +82,24 @@ extension NewDownloadViewController {
     private func createDownloadFolder() {
         if !fileManager.fileExists(atPath: appDownloadFolder.path) {
             try? fileManager.createDirectory(at: appDownloadFolder, withIntermediateDirectories: true)
+        }
+    }
+    
+    private func createEmptyFile(with fileName: String) {
+        var finalName = fileName
+        var count = 0
+        while fileManager.fileExists(atPath: appDownloadFolder.appendingPathComponent(finalName).path) {
+            count += 1
+            finalName = fileName
+            if let index = fileName.lastIndex(of: ".") {
+                finalName.insert(contentsOf: "(\(count))", at: index)
+            }
+        }
+        let filePath = appDownloadFolder.appendingPathComponent(finalName).path
+        if fileManager.createFile(atPath: filePath, contents: nil) == true {
+            dismiss(animated: true)
+        } else {
+            print("Create empty file error")
         }
     }
 }
