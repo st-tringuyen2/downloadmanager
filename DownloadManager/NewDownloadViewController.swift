@@ -18,11 +18,29 @@ class NewDownloadViewController: UIViewController {
     
     public var titleLabelText: String?
     
+    private let fileManager: FileManager
+    private lazy var downloasdDirectory: URL = {
+        let url = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)
+        
+        return url.first!
+    }()
+    
+    private lazy var appDownloadFolder: URL = {
+        let url = downloasdDirectory.appendingPathComponent("ST Download Manager")
+        
+        return url
+    }()
+
+    
+    private var saveLocation: URL?
+    
     private var viewModel: NewDowloadViewModel
     
-    init(viewModel: NewDowloadViewModel) {
+    init(viewModel: NewDowloadViewModel, fileManager: FileManager = .default) {
         self.viewModel = viewModel
+        self.fileManager = fileManager
         super.init(nibName: nil, bundle: nil)
+        createDownloadFolder()
     }
     
     required init?(coder: NSCoder) {
@@ -58,6 +76,14 @@ class NewDownloadViewController: UIViewController {
     
     @IBAction private func cancelButtonTapped() {
         dismiss(animated: true)
+    }
+}
+
+extension NewDownloadViewController {
+    private func createDownloadFolder() {
+        if !fileManager.fileExists(atPath: appDownloadFolder.path) {
+            try? fileManager.createDirectory(at: appDownloadFolder, withIntermediateDirectories: true)
+        }
     }
 }
 
