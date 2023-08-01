@@ -17,6 +17,7 @@ class NewDownloadViewController: UIViewController {
     @IBOutlet private var indicatorView: UIActivityIndicatorView!
     
     public var titleLabelText: String?
+    public var onStartDownload: ((FileMetaData) -> Void)?
     
     private var viewModel: NewDowloadViewModel
     
@@ -39,8 +40,8 @@ class NewDownloadViewController: UIViewController {
             self?.indicatorView.stopAnimating()
             switch result {
             case let .success(fileMetaData):
-                print("Success with \(fileMetaData)")
                 self?.dismiss(animated: true)
+                self?.onStartDownload?(fileMetaData)
             case let .failure(error):
                 print("Get metadata fail with error \(error.localizedDescription)")
             }

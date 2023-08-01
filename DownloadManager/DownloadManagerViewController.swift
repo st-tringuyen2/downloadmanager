@@ -37,7 +37,16 @@ class DownloadManagerViewController: UIViewController {
         let viewModel = NewDowloadViewModel(httpClient: URLSessionHTTPClient())
         let newDownloadVC = NewDownloadViewController(viewModel: viewModel)
         newDownloadVC.titleLabelText = "New Download"
+        newDownloadVC.onStartDownload = { [weak self] fileMetaData in
+            self?.startDownload(from: fileMetaData)
+        }
         present(newDownloadVC, animated: true)
+    }
+}
+
+extension DownloadManagerViewController {
+    private func startDownload(from fileMetaData: FileMetaData) {
+        print("Start download from \(fileMetaData)")
     }
 }
 
