@@ -23,6 +23,8 @@
 		E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */; };
 		E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51C2A793B10002314C7 /* Downloader.swift */; };
 		E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */; };
+		E4D5A5222A795A5F002314C7 /* URLSessionDownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */; };
+		E4D5A5242A795AB2002314C7 /* DownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5232A795AB2002314C7 /* DownloadClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; };
 		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
+		E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionDownloadClient.swift; sourceTree = "<group>"; };
+		E4D5A5232A795AB2002314C7 /* DownloadClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,7 @@
 		E43ED50E2A77BF730075D1D6 /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				E4D5A5202A795A55002314C7 /* Clients */,
 				E4D5A51B2A793AFD002314C7 /* Feature */,
 				E43ED5352A789C9E0075D1D6 /* UI Composers */,
 				E43ED5262A77BFE00075D1D6 /* Views */,
@@ -143,6 +148,15 @@
 				E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */,
 			);
 			name = Feature;
+			sourceTree = "<group>";
+		};
+		E4D5A5202A795A55002314C7 /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				E4D5A5232A795AB2002314C7 /* DownloadClient.swift */,
+				E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */,
+			);
+			name = Clients;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,10 +239,12 @@
 				E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
+				E4D5A5242A795AB2002314C7 /* DownloadClient.swift in Sources */,
 				E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */,
 				E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */,
 				E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */,
 				E43ED5122A77BF730075D1D6 /* SceneDelegate.swift in Sources */,
+				E4D5A5222A795A5F002314C7 /* URLSessionDownloadClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
