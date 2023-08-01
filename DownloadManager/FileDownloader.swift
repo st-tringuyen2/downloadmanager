@@ -12,6 +12,42 @@ public struct HTTPRangeRequestHeader: Hashable {
     let end: Int
 }
 
+class URLSessionDownloadClient: NSObject, DownloadClient {
+    private var activeDownloadsMap = [UUID: [Int: URLSessionDownloadTask]]()
+
+    private lazy var session: URLSession = {
+        let config = URLSessionConfiguration.background(withIdentifier: String(describing: self))
+        let session = URLSession(configuration: config, delegate: self, delegateQueue: .none)
+        
+        return session
+    }()
+    
+    func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?) {
+        var request = URLRequest(url: fileMetaData.url)
+        if let range = range {
+            request.setValue("bytes=\(range.start)-\(range.end)", forHTTPHeaderField: "Range")
+        }
+        let downloadTask = session.downloadTask(with: request)
+        downloadTask.resume()
+        if var activeDownload = activeDownloadsMap[fileMetaData.id] {
+            activeDownload[part] = downloadTask
+            activeDownloadsMap[fileMetaData.id] = activeDownload
+        } else {
+            activeDownloadsMap[fileMetaData.id] = [part: downloadTask]
+        }
+    }
+}
+
+extension URLSessionDownloadClient: URLSessionDownloadDelegate {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        
+    }
+}
+
+protocol DownloadClient {
+    func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?)
+}
+
 class FileDownloader: Downloader {
     private var numbersOfDownloadPart: Int {
         return 8
@@ -19,10 +55,18 @@ class FileDownloader: Downloader {
     
     private var downloadList = [FileMetaData]()
     private var downloadPartLocations = [UUID: [URL]]()
+    private var fileDownloads = [UUID: [Int]]()
     private var rangeRequests = [UUID: [HTTPRangeRequestHeader]]()
+    
+    private let client: DownloadClient
+    
+    init(client: DownloadClient) {
+        self.client = client
+    }
     
     func download(from fileMetaData: FileMetaData) {
         createRange(from: fileMetaData)
+        startDownload(from: fileMetaData)
     }
     
     private func createRange(from fileMetaData: FileMetaData) {
@@ -45,5 +89,20 @@ class FileDownloader: Downloader {
         }
         downloadPartLocations[fileMetaData.id] = partLocations
         rangeRequests[fileMetaData.id] = ranges
+    }
+    
+    private func startDownload(from fileMetaData: FileMetaData) {
+        guard let ranges = rangeRequests[fileMetaData.id], !ranges.isEmpty else {
+            client.download(from: fileMetaData, for: 0, with: nil)
+            fileDownloads[fileMetaData.id]?.append(0)
+            return
+        }
+        
+        var indexs = [Int]()
+        for (index, range) in ranges.enumerated() {
+            indexs.append(index)
+            fileDownloads[fileMetaData.id] = indexs
+            client.download(from: fileMetaData, for: index, with: range)
+        }
     }
 }

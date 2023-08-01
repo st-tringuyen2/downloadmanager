@@ -9,8 +9,7 @@ import UIKit
 
 class DownloadManagerComposer {
     
-    static func makeDownloadManagerViewController() -> DownloadManagerViewController {
-        let downloader = FileDownloader()
+    static func makeDownloadManagerViewController(downloader: Downloader) -> DownloadManagerViewController {
         let downloadManagerViewModel = DownloadManagerViewModel(downloader: downloader)
         let downloadManagerViewController = DownloadManagerViewController(viewModel: downloadManagerViewModel)
         
