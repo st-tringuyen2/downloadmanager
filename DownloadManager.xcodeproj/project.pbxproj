@@ -20,6 +20,7 @@
 		E43ED5312A77E9A90075D1D6 /* NewDownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5302A77E9A90075D1D6 /* NewDownloadViewController.swift */; };
 		E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */; };
 		E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */; };
+		E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		E43ED5302A77E9A90075D1D6 /* NewDownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDownloadViewController.swift; sourceTree = "<group>"; };
 		E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewModel.swift; sourceTree = "<group>"; };
 		E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerComposer.swift; sourceTree = "<group>"; };
+		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */,
+				E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */,
 			);
 			name = "View Models";
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
+				E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */,
 				E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */,
 				E43ED5122A77BF730075D1D6 /* SceneDelegate.swift in Sources */,
 			);

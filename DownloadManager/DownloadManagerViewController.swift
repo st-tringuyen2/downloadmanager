@@ -34,7 +34,8 @@ class DownloadManagerViewController: UIViewController {
     }
     
     @IBAction private func onAddDownloadButtonTapped() {
-        let newDownloadVC = NewDownloadViewController()
+        let viewModel = NewDowloadViewModel(httpClient: URLSessionHTTPClient())
+        let newDownloadVC = NewDownloadViewController(viewModel: viewModel)
         newDownloadVC.titleLabelText = "New Download"
         present(newDownloadVC, animated: true)
     }

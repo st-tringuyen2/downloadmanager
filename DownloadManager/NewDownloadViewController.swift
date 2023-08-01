@@ -18,19 +18,45 @@ class NewDownloadViewController: UIViewController {
     
     public var titleLabelText: String?
     
+    private var viewModel: NewDowloadViewModel
+    
+    init(viewModel: NewDowloadViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = titleLabelText
     }
     
-    @IBAction private func cancelButtonTapped() {
-        dismiss(animated: true)
+    private func mapMetaData(from result: Result<String, Error>) {
+        DispatchQueue.main.async { [weak self] in
+            self?.indicatorView.stopAnimating()
+            switch result {
+            case let .success(fileName):
+                print(fileName)
+                self?.dismiss(animated: true)
+            case let .failure(error):
+                print("Get metadata fail with error \(error)")
+            }
+        }
     }
     
     @IBAction private func downloadButtonTapped() {
-        guard let _ = URL(string: textField.text ?? "") else { return }
+        guard let url = URL(string: textField.text ?? "") else { return }
         textField.endEditing(true)
         indicatorView.startAnimating()
+        viewModel.getMetaData(from: url) { [weak self] result in
+            self?.mapMetaData(from: result)
+        }
+    }
+    
+    @IBAction private func cancelButtonTapped() {
         dismiss(animated: true)
     }
 }
