@@ -18,29 +18,11 @@ class NewDownloadViewController: UIViewController {
     
     public var titleLabelText: String?
     
-    private let fileManager: FileManager
-    private lazy var downloasdDirectory: URL = {
-        let url = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)
-        
-        return url.first!
-    }()
-    
-    private lazy var appDownloadFolder: URL = {
-        let url = downloasdDirectory.appendingPathComponent("ST Download Manager")
-        
-        return url
-    }()
-
-    
-    private var saveLocation: URL?
-    
     private var viewModel: NewDowloadViewModel
     
-    init(viewModel: NewDowloadViewModel, fileManager: FileManager = .default) {
+    init(viewModel: NewDowloadViewModel) {
         self.viewModel = viewModel
-        self.fileManager = fileManager
         super.init(nibName: nil, bundle: nil)
-        createDownloadFolder()
     }
     
     required init?(coder: NSCoder) {
@@ -52,14 +34,14 @@ class NewDownloadViewController: UIViewController {
         titleLabel.text = titleLabelText
     }
     
-    private func handleMetaDataResult(_ result: Result<String, Error>) {
+    private func handleMetaDataResult(_ result: Result<String, NewDowloadViewModel.Error>) {
         DispatchQueue.main.async { [weak self] in
             self?.indicatorView.stopAnimating()
             switch result {
-            case let .success(fileName):
-                self?.createEmptyFile(with: fileName)
+            case .success:
+                self?.dismiss(animated: true)
             case let .failure(error):
-                print("Get metadata fail with error \(error)")
+                print("Get metadata fail with error \(error.localizedDescription)")
             }
         }
     }
@@ -75,32 +57,6 @@ class NewDownloadViewController: UIViewController {
     
     @IBAction private func cancelButtonTapped() {
         dismiss(animated: true)
-    }
-}
-
-extension NewDownloadViewController {
-    private func createDownloadFolder() {
-        if !fileManager.fileExists(atPath: appDownloadFolder.path) {
-            try? fileManager.createDirectory(at: appDownloadFolder, withIntermediateDirectories: true)
-        }
-    }
-    
-    private func createEmptyFile(with fileName: String) {
-        var finalName = fileName
-        var count = 0
-        while fileManager.fileExists(atPath: appDownloadFolder.appendingPathComponent(finalName).path) {
-            count += 1
-            finalName = fileName
-            if let index = fileName.lastIndex(of: ".") {
-                finalName.insert(contentsOf: "(\(count))", at: index)
-            }
-        }
-        let filePath = appDownloadFolder.appendingPathComponent(finalName).path
-        if fileManager.createFile(atPath: filePath, contents: nil) == true {
-            dismiss(animated: true)
-        } else {
-            print("Create empty file error")
-        }
     }
 }
 

@@ -40,26 +40,86 @@ protocol HTTPClient {
 }
 
 class NewDowloadViewModel {
-    private var httpClient: HTTPClient
     
+    enum Error: Swift.Error {
+        case invalidData
+        
+        var localizedDescription: String {
+            var description = ""
+            switch self {
+            case .invalidData: description = "Meta data is invalid"
+            }
+            
+            return description
+        }
+    }
+    
+    private lazy var downloasdDirectory: URL = {
+        let url = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)
+        
+        return url.first!
+    }()
+    
+    private lazy var appDownloadFolder: URL = {
+        let url = downloasdDirectory.appendingPathComponent("ST Download Manager")
+        
+        return url
+    }()
+
     private var downloadURL: URL?
     private var saveLocation: URL?
     private var fileName: String?
     private var fileSize: Double?
     
-    init(httpClient: HTTPClient) {
+    private var httpClient: HTTPClient
+    private let fileManager: FileManager
+    
+    init(httpClient: HTTPClient, fileManager: FileManager = .default) {
         self.httpClient = httpClient
+        self.fileManager = fileManager
+        createDownloadFolder()
     }
     
     func getMetaData(from url: URL, completion: @escaping (Result<String, Error>) -> Void) {
         downloadURL = url
-        httpClient.get(from: url, with: .HEAD) { result in
+        httpClient.get(from: url, with: .HEAD) { [weak self] result in
             switch result {
             case let .success((_, response)):
-                completion(.success(response.suggestedFilename ?? "Unknow"))
-            case let .failure(error):
-                completion(.failure(error))
+                self?.validateMetaData(from: response, completion: completion)
+            case .failure:
+                completion(.failure(.invalidData))
             }
         }
+    }
+    
+    private func validateMetaData(from response: HTTPURLResponse, completion: @escaping (Result<String, Error>) -> Void) {
+        guard response.statusCode == 200 else { return completion(.failure(Error.invalidData)) }
+        let fileName = response.suggestedFilename ?? "Unknow"
+        if createEmptyFile(with: fileName) {
+            completion(.success(fileName) )
+        }
+    }
+}
+
+extension NewDowloadViewModel {
+    private func createDownloadFolder() {
+        if !fileManager.fileExists(atPath: appDownloadFolder.path) {
+            try? fileManager.createDirectory(at: appDownloadFolder, withIntermediateDirectories: true)
+        }
+    }
+    
+    private func createEmptyFile(with fileName: String) -> Bool {
+        var finalName = fileName
+        var count = 0
+        while fileManager.fileExists(atPath: appDownloadFolder.appendingPathComponent(finalName).path) {
+            count += 1
+            finalName = fileName
+            if let index = fileName.lastIndex(of: ".") {
+                finalName.insert(contentsOf: "(\(count))", at: index)
+            }
+        }
+        let filePath = appDownloadFolder.appendingPathComponent(finalName).path
+        
+        return fileManager.createFile(atPath: filePath, contents: nil)
     }
 }
