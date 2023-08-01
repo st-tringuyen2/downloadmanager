@@ -34,11 +34,12 @@ class NewDownloadViewController: UIViewController {
         titleLabel.text = titleLabelText
     }
     
-    private func handleMetaDataResult(_ result: Result<String, NewDowloadViewModel.Error>) {
+    private func handleMetaDataResult(_ result: Result<FileMetaData, NewDowloadViewModel.Error>) {
         DispatchQueue.main.async { [weak self] in
             self?.indicatorView.stopAnimating()
             switch result {
-            case .success:
+            case let .success(fileMetaData):
+                print("Success with \(fileMetaData)")
                 self?.dismiss(animated: true)
             case let .failure(error):
                 print("Get metadata fail with error \(error.localizedDescription)")

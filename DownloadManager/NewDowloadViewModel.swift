@@ -39,15 +39,29 @@ protocol HTTPClient {
     func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
 }
 
+struct FileMetaData {
+    let id: UUID
+    let url: URL
+    let name: String
+    let size: Int
+    let saveLocation: URL
+    var state: DownloadState
+    var progress: Float?
+}
+
 class NewDowloadViewModel {
     
     enum Error: Swift.Error {
+        case connectivity
         case invalidData
+        case unsupportedURL
         
         var localizedDescription: String {
             var description = ""
             switch self {
+            case .connectivity: description = "Can not request data"
             case .invalidData: description = "Meta data is invalid"
+            case .unsupportedURL: description = "System does not support download this content"
             }
             
             return description
@@ -67,9 +81,6 @@ class NewDowloadViewModel {
     }()
 
     private var downloadURL: URL?
-    private var saveLocation: URL?
-    private var fileName: String?
-    private var fileSize: Double?
     
     private var httpClient: HTTPClient
     private let fileManager: FileManager
@@ -80,23 +91,29 @@ class NewDowloadViewModel {
         createDownloadFolder()
     }
     
-    func getMetaData(from url: URL, completion: @escaping (Result<String, Error>) -> Void) {
+    func getMetaData(from url: URL, completion: @escaping (Result<FileMetaData, Error>) -> Void) {
         downloadURL = url
         httpClient.get(from: url, with: .HEAD) { [weak self] result in
             switch result {
             case let .success((_, response)):
                 self?.validateMetaData(from: response, completion: completion)
             case .failure:
-                completion(.failure(.invalidData))
+                completion(.failure(.connectivity))
             }
         }
     }
     
-    private func validateMetaData(from response: HTTPURLResponse, completion: @escaping (Result<String, Error>) -> Void) {
+    private func validateMetaData(from response: HTTPURLResponse, completion: @escaping (Result<FileMetaData, Error>) -> Void) {
         guard response.statusCode == 200 else { return completion(.failure(Error.invalidData)) }
+        if response.mimeType?.contains("html") == true {
+            completion(.failure(.unsupportedURL))
+            return
+        }
         let fileName = response.suggestedFilename ?? "Unknow"
-        if createEmptyFile(with: fileName) {
-            completion(.success(fileName) )
+        if let fileLocation = createEmptyFile(with: fileName), let downloadURL = downloadURL {
+            let fileMetaData = FileMetaData(id: UUID(), url: downloadURL, name: fileLocation.lastPathComponent, size: Int(response.expectedContentLength), saveLocation: fileLocation, state: .notDownload)
+
+            completion(.success(fileMetaData))
         }
     }
 }
@@ -108,7 +125,7 @@ extension NewDowloadViewModel {
         }
     }
     
-    private func createEmptyFile(with fileName: String) -> Bool {
+    private func createEmptyFile(with fileName: String) -> URL? {
         var finalName = fileName
         var count = 0
         while fileManager.fileExists(atPath: appDownloadFolder.appendingPathComponent(finalName).path) {
@@ -118,8 +135,12 @@ extension NewDowloadViewModel {
                 finalName.insert(contentsOf: "(\(count))", at: index)
             }
         }
-        let filePath = appDownloadFolder.appendingPathComponent(finalName).path
+        let fileLocation = appDownloadFolder.appendingPathComponent(finalName)
         
-        return fileManager.createFile(atPath: filePath, contents: nil)
+        if fileManager.createFile(atPath: fileLocation.path, contents: nil) {
+            return fileLocation
+        } else {
+            return nil
+        }
     }
 }
