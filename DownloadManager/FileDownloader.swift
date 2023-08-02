@@ -14,6 +14,11 @@ protocol DownloadDelegate: AnyObject {
 }
 
 class FileDownloader: NSObject, Downloader {
+    
+    public enum Error: Swift.Error {
+        case mergeFileError
+    }
+    
     private var numbersOfDownloadPart: Int {
         return 8
     }
@@ -75,8 +80,9 @@ class FileDownloader: NSObject, Downloader {
 }
 
 extension FileDownloader: DownloadClientDelegate {
-    func didComplete(with error: Error, for id: UUID, at part: Int) {
-        print(error, id, part)
+    func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
+        removeCompletePartDownload(id, part)
+        checkDownloadFinish(for: id)
     }
     
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int) {
@@ -97,5 +103,51 @@ extension FileDownloader {
     private func totalDownloadProgress(for id: UUID) -> Float {
         guard let progress = downloadProgress[id] else { return 0 }
         return progress.reduce(0, { $0 + $1.value }) / Float(numbersOfDownloadPart)
+    }
+    
+    private func removeCompletePartDownload(_ id: UUID, _ part: Int) {
+        if var fileDict = fileDownloads.first(where: { $0.key == id}) {
+            fileDict.value.removeAll(where: { $0 == part })
+            fileDownloads.updateValue(fileDict.value, forKey: fileDict.key)
+        }
+    }
+    
+    private func checkDownloadFinish(for id: UUID) {
+        if fileDownloads.first(where: { $0.key == id})?.value.isEmpty == true {
+            debugPrint("Finish downloaded all parts of id \(id)")
+            mergeFile(for: id)
+        }
+    }
+    
+    private func mergeFile(for id: UUID) {
+        guard downloadPartLocations[id]?.count == numbersOfDownloadPart else {
+            delegate?.didComplete(with: FileDownloader.Error.mergeFileError, for: id)
+            return
+        }
+        if let locations = downloadPartLocations[id], let saveLocation = downloadList.first(where: { $0.id == id })?.saveLocation {
+            do {
+                try writeDataToFile(from: locations, to: saveLocation)
+            } catch {
+                debugPrint("Try to write data to file \(saveLocation) but failed with \(error)")
+                delegate?.didComplete(with: FileDownloader.Error.mergeFileError, for: id)
+            }
+        }
+    }
+    
+    private func writeDataToFile(from locations: [URL], to fileLocation: URL) throws {
+        let maxNumberOfBytesToRead = 5 * 1024 * 1024 // 50MB
+        let writer = try FileHandle(forWritingTo: fileLocation)
+        try locations.forEach { location in
+            let reader = try FileHandle(forReadingFrom: location)
+            var dataOrNil = try reader.read(upToCount: maxNumberOfBytesToRead)
+            while (dataOrNil?.count ?? 0) > 0 {
+                if let data = dataOrNil {
+                    try writer.write(contentsOf: data)
+                    dataOrNil = reader.readData(ofLength: maxNumberOfBytesToRead)
+                }
+                try reader.close()
+            }
+        }
+        try writer.close()
     }
 }
