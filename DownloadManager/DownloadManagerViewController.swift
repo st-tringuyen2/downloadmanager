@@ -25,6 +25,7 @@ class DownloadManagerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        handleEventFromViewModel()
     }
     
     private func configureUI() {
@@ -39,6 +40,7 @@ class DownloadManagerViewController: UIViewController {
         newDownloadVC.titleLabelText = "New Download"
         newDownloadVC.onStartDownload = { [weak self] fileMetaData in
             self?.startDownload(from: fileMetaData)
+            self?.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
         present(newDownloadVC, animated: true)
     }
@@ -47,6 +49,15 @@ class DownloadManagerViewController: UIViewController {
 extension DownloadManagerViewController {
     private func startDownload(from fileMetaData: FileMetaData) {
         viewModel.download(from: fileMetaData)
+    }
+    
+    private func handleEventFromViewModel() {
+        viewModel.updateProgress = { [weak self] progress, index in
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = self?.tableView.cellForRow(at: indexPath) as? DownloadCell {
+                cell.updateProgress(progress)
+            }
+        }
     }
 }
 

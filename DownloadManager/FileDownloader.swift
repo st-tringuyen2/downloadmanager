@@ -29,22 +29,33 @@ class FileDownloader: NSObject, Downloader {
     private var rangeRequests = [UUID: [HTTPRangeRequestHeader]]()
     private var downloadProgress = [UUID: [Int: Float]]()
     
+    private let fileManager: FileManager
+    
     public weak var delegate: DownloadDelegate?
     private let client: DownloadClient
     
-    init(client: DownloadClient) {
+    init(client: DownloadClient, fileManager: FileManager = .default) {
         self.client = client
+        self.fileManager = fileManager
     }
     
     func download(from fileMetaData: FileMetaData) {
+        downloadList.append(fileMetaData)
         createRange(from: fileMetaData)
         startDownload(from: fileMetaData)
     }
     
     private func createRange(from fileMetaData: FileMetaData) {
+        guard numbersOfDownloadPart > 0 else {
+            downloadPartLocations[fileMetaData.id] = []
+            return
+        }
         let sizeOfPart = fileMetaData.size / numbersOfDownloadPart
         
-        guard sizeOfPart > 0 else { return }
+        guard sizeOfPart > 0 else {
+            downloadPartLocations[fileMetaData.id] = []
+            return
+        }
         
         var startRange = 0
         var endRange = 0
@@ -52,8 +63,8 @@ class FileDownloader: NSObject, Downloader {
         var partLocations = [URL]()
         
         for i in 0..<numbersOfDownloadPart {
-            let saveLocation = fileMetaData.saveLocation.appendingPathComponent(".part\(i)")
-            partLocations.append(saveLocation)
+            let saveLocation = fileMetaData.saveLocation.deletingLastPathComponent()
+            partLocations.append(saveLocation.appendingPathComponent(fileMetaData.name + ".part\(i)"))
             endRange += (sizeOfPart - 1)
             let range = HTTPRangeRequestHeader(start: startRange, end: i == numbersOfDownloadPart - 1 ? fileMetaData.size : endRange - 1)
             ranges.append(range)
@@ -66,7 +77,7 @@ class FileDownloader: NSObject, Downloader {
     private func startDownload(from fileMetaData: FileMetaData) {
         guard let ranges = rangeRequests[fileMetaData.id], !ranges.isEmpty else {
             client.download(from: fileMetaData, for: 0, with: nil)
-            fileDownloads[fileMetaData.id]?.append(0)
+            fileDownloads[fileMetaData.id] = [0]
             return
         }
         
@@ -95,14 +106,16 @@ extension FileDownloader: DownloadClientDelegate {
     }
     
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int) {
-        
+        moveFile(from: location, with: id, at: part)
+        removeCompletePartDownload(id, part)
+        checkDownloadFinish(for: id)
     }
 }
 
 extension FileDownloader {
     private func totalDownloadProgress(for id: UUID) -> Float {
         guard let progress = downloadProgress[id] else { return 0 }
-        return progress.reduce(0, { $0 + $1.value }) / Float(numbersOfDownloadPart)
+        return numbersOfDownloadPart > 0 ? progress.reduce(0, { $0 + $1.value }) / Float(numbersOfDownloadPart) : progress.reduce(0, { $0 + $1.value })
     }
     
     private func removeCompletePartDownload(_ id: UUID, _ part: Int) {
@@ -115,7 +128,9 @@ extension FileDownloader {
     private func checkDownloadFinish(for id: UUID) {
         if fileDownloads.first(where: { $0.key == id})?.value.isEmpty == true {
             debugPrint("Finish downloaded all parts of id \(id)")
-            mergeFile(for: id)
+            if numbersOfDownloadPart > 0 {
+                mergeFile(for: id)
+            }
         }
     }
     
@@ -127,6 +142,7 @@ extension FileDownloader {
         if let locations = downloadPartLocations[id], let saveLocation = downloadList.first(where: { $0.id == id })?.saveLocation {
             do {
                 try writeDataToFile(from: locations, to: saveLocation)
+                delegate?.didFinishDownloading(to: saveLocation, for: id)
             } catch {
                 debugPrint("Try to write data to file \(saveLocation) but failed with \(error)")
                 delegate?.didComplete(with: FileDownloader.Error.mergeFileError, for: id)
@@ -135,7 +151,7 @@ extension FileDownloader {
     }
     
     private func writeDataToFile(from locations: [URL], to fileLocation: URL) throws {
-        let maxNumberOfBytesToRead = 5 * 1024 * 1024 // 50MB
+        var maxNumberOfBytesToRead = 50 * 1024 * 1024 // 50MB
         let writer = try FileHandle(forWritingTo: fileLocation)
         try locations.forEach { location in
             let reader = try FileHandle(forReadingFrom: location)
@@ -143,11 +159,25 @@ extension FileDownloader {
             while (dataOrNil?.count ?? 0) > 0 {
                 if let data = dataOrNil {
                     try writer.write(contentsOf: data)
-                    dataOrNil = reader.readData(ofLength: maxNumberOfBytesToRead)
+                    maxNumberOfBytesToRead += maxNumberOfBytesToRead
+                    dataOrNil = try reader.read(upToCount: maxNumberOfBytesToRead)
                 }
                 try reader.close()
             }
+            try fileManager.removeItem(at: location)
         }
         try writer.close()
+    }
+    
+    private func moveFile(from location: URL, with id: UUID, at part: Int) {
+        if numbersOfDownloadPart == 0, let saveLocation = downloadList.first(where: { $0.id == id })?.saveLocation {
+            try? writeDataToFile(from: [location], to: saveLocation)
+        } else {
+            for (index, partLocation) in (downloadPartLocations[id] ?? []).enumerated() {
+                if part == index {
+                    try? fileManager.moveItem(at: location, to: partLocation)
+                }
+            }
+        }
     }
 }

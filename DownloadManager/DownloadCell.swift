@@ -15,11 +15,12 @@ enum DownloadState: Int {
 }
 
 struct DownloadCellModel {
+    let id: String
     let fileName: String
     let fileSize: String
     var state: DownloadState
     
-    static var dumyList: [DownloadCellModel] = .init(repeating: DownloadCellModel(fileName: "test", fileSize: "30 MB", state: .pause), count: 10)
+    static var dumyList: [DownloadCellModel] = .init(repeating: DownloadCellModel(id: UUID().uuidString, fileName: "test", fileSize: "30 MB", state: .pause), count: 10)
 }
 
 class DownloadCell: UITableViewCell {
@@ -35,7 +36,11 @@ class DownloadCell: UITableViewCell {
         updateButtonState(with: model.state)
     }
     
-    private func updateButtonState(with state: DownloadState) {
+    func updateProgress(_ progress: Float) {
+        progressView.progress = progress
+    }
+    
+    func updateButtonState(with state: DownloadState) {
         guard state != .downloaded else {
             startPauseButton.isHidden = true
             cancelButton.isHidden = true

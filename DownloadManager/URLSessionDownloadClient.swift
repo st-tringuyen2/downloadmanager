@@ -18,7 +18,7 @@ class URLSessionDownloadClient: NSObject, DownloadClient {
     private var resumeData = [UUID: [Int: Data]]()
 
     private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.background(withIdentifier: "String(describing: self)")
+        let config = URLSessionConfiguration.background(withIdentifier: "ST-Download-Manager-Download-Session")
         let session = URLSession(configuration: config, delegate: self, delegateQueue: .none)
         
         return session
