@@ -18,6 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let client = URLSessionDownloadClient()
         let downloader = FileDownloader(client: client)
+        client.delegate = downloader
         let downloadManagerViewController = DownloadManagerComposer.makeDownloadManagerViewController(downloader: downloader)
         navigationController = UINavigationController(rootViewController: downloadManagerViewController)
         

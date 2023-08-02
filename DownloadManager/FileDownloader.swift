@@ -7,7 +7,13 @@
 
 import Foundation
 
-class FileDownloader: Downloader {
+protocol DownloadDelegate: AnyObject {
+    func didComplete(with error: Error, for id: UUID)
+    func downloadingProgess(_ progress: Float, for id: UUID)
+    func didFinishDownloading(to location: URL, for id: UUID)
+}
+
+class FileDownloader: NSObject, Downloader {
     private var numbersOfDownloadPart: Int {
         return 8
     }
@@ -16,7 +22,9 @@ class FileDownloader: Downloader {
     private var downloadPartLocations = [UUID: [URL]]()
     private var fileDownloads = [UUID: [Int]]()
     private var rangeRequests = [UUID: [HTTPRangeRequestHeader]]()
+    private var downloadProgress = [UUID: [Int: Float]]()
     
+    public weak var delegate: DownloadDelegate?
     private let client: DownloadClient
     
     init(client: DownloadClient) {
@@ -63,5 +71,31 @@ class FileDownloader: Downloader {
             fileDownloads[fileMetaData.id] = indexs
             client.download(from: fileMetaData, for: index, with: range)
         }
+    }
+}
+
+extension FileDownloader: DownloadClientDelegate {
+    func didComplete(with error: Error, for id: UUID, at part: Int) {
+        print(error, id, part)
+    }
+    
+    func downloadingProgress(_ progress: Float, for id: UUID, at part: Int) {
+        if downloadProgress[id] == nil {
+            downloadProgress[id] = [part: progress]
+        } else {
+            downloadProgress[id]?[part] = progress
+        }
+        delegate?.downloadingProgess(totalDownloadProgress(for: id), for: id)
+    }
+    
+    func didFinishDownloading(to location: URL, for id: UUID, at part: Int) {
+        
+    }
+}
+
+extension FileDownloader {
+    private func totalDownloadProgress(for id: UUID) -> Float {
+        guard let progress = downloadProgress[id] else { return 0 }
+        return progress.reduce(0, { $0 + $1.value }) / Float(numbersOfDownloadPart)
     }
 }

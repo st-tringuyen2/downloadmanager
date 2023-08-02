@@ -10,10 +10,11 @@ import Foundation
 class DownloadManagerViewModel {
     private var downloadList = [DownloadCellModel]()
     
-    private let downloader: Downloader
+    private var downloader: Downloader
     
     init(downloader: Downloader) {
         self.downloader = downloader
+        self.downloader.delegate = self
     }
 
     var numbersOfItems: Int {
@@ -28,5 +29,19 @@ class DownloadManagerViewModel {
 extension DownloadManagerViewModel {
     func download(from fileMetaData: FileMetaData) {
         downloader.download(from: fileMetaData)
+    }
+}
+
+extension DownloadManagerViewModel: DownloadDelegate {
+    func didComplete(with error: Error, for id: UUID) {
+        
+    }
+    
+    func downloadingProgess(_ progress: Float, for id: UUID) {
+        print(progress)
+    }
+    
+    func didFinishDownloading(to location: URL, for id: UUID) {
+        
     }
 }

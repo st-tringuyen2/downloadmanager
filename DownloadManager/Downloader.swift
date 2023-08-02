@@ -8,5 +8,6 @@
 import Foundation
 
 protocol Downloader {
+    var delegate: DownloadDelegate? { get set }
     func download(from fileMetaData: FileMetaData)
 }

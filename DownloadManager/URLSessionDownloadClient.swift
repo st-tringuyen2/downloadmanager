@@ -9,7 +9,7 @@ import Foundation
 
 protocol DownloadClientDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID, at part: Int)
-    func downloadingProgress(_ calculatedProgress: Float, for id: UUID, at part: Int)
+    func downloadingProgress(_ progress: Float, for id: UUID, at part: Int)
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int)
 }
 
