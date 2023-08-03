@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum DownloadState: Int {
+enum DownloadState: Int, Codable {
     case notDownload
     case downloading
     case pause

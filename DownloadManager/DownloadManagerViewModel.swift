@@ -7,15 +7,42 @@
 
 import Foundation
 
+struct FileSave: Codable {
+    let id: UUID
+    let name: String
+    let size: Int
+    let url: URL
+    let saveLocation: URL
+    var progress: Float
+    var status: DownloadState
+}
+
+protocol DownloadStore {
+    func getDownloadList() -> [FileSave]
+    func saveDownloadFile(_ file: FileSave)
+}
+
 class DownloadManagerViewModel {
     var updateProgress: ((Float, Int) -> Void)?
     private var downloadList = [DownloadCellModel]()
     
     private var downloader: Downloader
+    private var downloadStore: DownloadStore
     
-    init(downloader: Downloader) {
+    init(downloader: Downloader, downloadStore: DownloadStore) {
         self.downloader = downloader
+        self.downloadStore = downloadStore
         self.downloader.delegate = self
+       initDownloadList()
+    }
+    
+    private func initDownloadList() {
+        let listDownloadSaved = downloadStore.getDownloadList()
+        downloadList = listDownloadSaved.map({ fileSaved in
+            let fileSize: Float = Float(fileSaved.size / 1024 / 1024)
+            let fileSizeString = "\(fileSize) MB"
+            return DownloadCellModel(id: fileSaved.id.uuidString, fileName: fileSaved.name, fileSize: fileSizeString, state: fileSaved.status)
+        })
     }
 
     var numbersOfItems: Int {
@@ -37,6 +64,7 @@ extension DownloadManagerViewModel {
         let fileSize: Float = Float(fileMetaData.size / 1024 / 1024)
         let fileSizeString = "\(fileSize) MB"
         downloadList.insert(DownloadCellModel(id: fileMetaData.id.uuidString, fileName: fileMetaData.name, fileSize: fileSizeString, state: .downloading), at: 0)
+        downloadStore.saveDownloadFile(FileSave(id: fileMetaData.id, name: fileMetaData.name, size: fileMetaData.size, url: fileMetaData.url, saveLocation: fileMetaData.saveLocation, progress: 0, status: .downloading))
     }
 }
 
