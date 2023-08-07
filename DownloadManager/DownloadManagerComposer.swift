@@ -8,6 +8,7 @@
 import UIKit
 
 extension UserDefaults: DownloadStore {
+    
     func getDownloadList() -> [FileSave] {
         guard let fileData = object(forKey: "file-download-key") as? Data else{ return [] }
 
@@ -24,6 +25,14 @@ extension UserDefaults: DownloadStore {
         let encoder = JSONEncoder()
         if let fileEncoded = try? encoder.encode(fileData) {
             setValue(fileEncoded, forKey: "file-download-key")
+        }
+    }
+    
+    func updateProgress(_ progress: Float, to file: FileSave) {
+        let fileList = getDownloadList()
+        if var savedFile = fileList.first(where: { $0.id == file.id }) {
+            savedFile.progress = progress
+            saveDownloadFile(savedFile)
         }
     }
 }

@@ -20,6 +20,7 @@ struct FileSave: Codable {
 protocol DownloadStore {
     func getDownloadList() -> [FileSave]
     func saveDownloadFile(_ file: FileSave)
+    func updateProgress(_ progress: Float, to file: FileSave)
 }
 
 class DownloadManagerViewModel {
@@ -41,7 +42,7 @@ class DownloadManagerViewModel {
         downloadList = listDownloadSaved.map({ fileSaved in
             let fileSize: Float = Float(fileSaved.size / 1024 / 1024)
             let fileSizeString = "\(fileSize) MB"
-            return DownloadCellModel(id: fileSaved.id.uuidString, fileName: fileSaved.name, fileSize: fileSizeString, state: fileSaved.status)
+            return DownloadCellModel(id: fileSaved.id.uuidString, fileName: fileSaved.name, fileSize: fileSizeString, state: fileSaved.status, progress: fileSaved.progress)
         })
     }
 
@@ -63,7 +64,7 @@ extension DownloadManagerViewModel {
     func updateDownloadList(from fileMetaData: FileMetaData) {
         let fileSize: Float = Float(fileMetaData.size / 1024 / 1024)
         let fileSizeString = "\(fileSize) MB"
-        downloadList.insert(DownloadCellModel(id: fileMetaData.id.uuidString, fileName: fileMetaData.name, fileSize: fileSizeString, state: .downloading), at: 0)
+        downloadList.insert(DownloadCellModel(id: fileMetaData.id.uuidString, fileName: fileMetaData.name, fileSize: fileSizeString, state: .downloading, progress: 0), at: 0)
         downloadStore.saveDownloadFile(FileSave(id: fileMetaData.id, name: fileMetaData.name, size: fileMetaData.size, url: fileMetaData.url, saveLocation: fileMetaData.saveLocation, progress: 0, status: .downloading))
     }
 }
@@ -81,6 +82,9 @@ extension DownloadManagerViewModel: DownloadDelegate {
         if let downloadIndex = getIndex(for: id.uuidString) {
             DispatchQueue.main.async { [weak self] in
                 self?.updateProgress?(progress, downloadIndex)
+            }
+            if let fileSaved = downloadStore.getDownloadList().first(where: { $0.id == id }) {
+                downloadStore.updateProgress(progress, to: fileSaved)
             }
         }
     }

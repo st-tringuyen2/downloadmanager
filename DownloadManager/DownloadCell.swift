@@ -19,8 +19,9 @@ struct DownloadCellModel {
     let fileName: String
     let fileSize: String
     var state: DownloadState
+    var progress: Float
     
-    static var dumyList: [DownloadCellModel] = .init(repeating: DownloadCellModel(id: UUID().uuidString, fileName: "test", fileSize: "30 MB", state: .pause), count: 10)
+    static var dumyList: [DownloadCellModel] = .init(repeating: DownloadCellModel(id: UUID().uuidString, fileName: "test", fileSize: "30 MB", state: .pause, progress: 0), count: 10)
 }
 
 class DownloadCell: UITableViewCell {
