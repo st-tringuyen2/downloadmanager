@@ -20,7 +20,8 @@ struct FileSave: Codable {
 protocol DownloadStore {
     func getDownloadList() -> [FileSave]
     func saveDownloadFile(_ file: FileSave)
-    func updateProgress(_ progress: Float, to file: FileSave)
+    func updateProgress(_ progress: Float, for fileID: UUID)
+    func updateDownloadStatus(_ status: DownloadState, for fileID: UUID)
 }
 
 class DownloadManagerViewModel {
@@ -76,6 +77,7 @@ extension DownloadManagerViewModel: DownloadDelegate {
     
     func didComplete(with error: Error, for id: UUID) {
         print(error)
+        downloadStore.updateDownloadStatus(.failed, for: id)
     }
     
     func downloadingProgess(_ progress: Float, for id: UUID) {
@@ -83,13 +85,12 @@ extension DownloadManagerViewModel: DownloadDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.updateProgress?(progress, downloadIndex)
             }
-            if let fileSaved = downloadStore.getDownloadList().first(where: { $0.id == id }) {
-                downloadStore.updateProgress(progress, to: fileSaved)
-            }
+            downloadStore.updateProgress(progress, for: id)
         }
     }
     
     func didFinishDownloading(to location: URL, for id: UUID) {
         print("finish download to \(location)")
+        downloadStore.updateDownloadStatus(.downloaded, for: id)
     }
 }

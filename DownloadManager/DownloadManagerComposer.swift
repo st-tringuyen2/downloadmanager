@@ -28,12 +28,22 @@ extension UserDefaults: DownloadStore {
         }
     }
     
-    func updateProgress(_ progress: Float, to file: FileSave) {
-        let fileList = getDownloadList()
-        if var savedFile = fileList.first(where: { $0.id == file.id }) {
+    func updateProgress(_ progress: Float, for fileID: UUID) {
+        if var savedFile = getFileSaved(from: fileID) {
             savedFile.progress = progress
             saveDownloadFile(savedFile)
         }
+    }
+    
+    func updateDownloadStatus(_ status: DownloadState, for fileID: UUID) {
+        if var savedFile = getFileSaved(from: fileID) {
+            savedFile.status = status
+            saveDownloadFile(savedFile)
+        }
+    }
+    
+    private func getFileSaved(from id: UUID) -> FileSave? {
+        getDownloadList().first(where: { $0.id == id })
     }
 }
 

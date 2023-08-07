@@ -12,6 +12,7 @@ enum DownloadState: Int, Codable {
     case downloading
     case pause
     case downloaded
+    case failed
 }
 
 struct DownloadCellModel {
