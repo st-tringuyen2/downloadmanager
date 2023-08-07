@@ -58,6 +58,13 @@ extension DownloadManagerViewController {
                 cell.updateProgress(progress)
             }
         }
+        
+        viewModel.updateStatus = { [weak self] status, index in
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = self?.tableView.cellForRow(at: indexPath) as? DownloadCell {
+                cell.updateDownloadState(status)
+            }
+        }
     }
 }
 

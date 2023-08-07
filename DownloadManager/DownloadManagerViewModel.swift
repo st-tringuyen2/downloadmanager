@@ -26,6 +26,7 @@ protocol DownloadStore {
 
 class DownloadManagerViewModel {
     var updateProgress: ((Float, Int) -> Void)?
+    var updateStatus: ((DownloadState, Int) -> Void)?
     private var downloadList = [DownloadCellModel]()
     
     private var downloader: Downloader

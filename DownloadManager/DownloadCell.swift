@@ -61,4 +61,14 @@ class DownloadCell: UITableViewCell {
         startPauseButton.setImage(image, for: .normal)
         cancelButton.isEnabled = state == .downloading || state == .pause
     }
+    
+    func updateDownloadState(_ state: DownloadState) {
+        if state == .downloaded {
+            startPauseButton.isHidden = true
+            cancelButton.isHidden = true
+            progressView.isHidden = true
+        } else if state == .failed {
+            startPauseButton.setImage(UIImage(systemName: "gobackward"), for: .normal)
+        }
+    }
 }
