@@ -10,4 +10,5 @@ import Foundation
 protocol Downloader {
     var delegate: DownloadDelegate? { get set }
     func download(from fileMetaData: FileMetaData)
+    func updateDownloadList(_ list: [FileMetaData])
 }

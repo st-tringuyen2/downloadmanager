@@ -39,6 +39,10 @@ class FileDownloader: NSObject, Downloader {
         self.fileManager = fileManager
     }
     
+    func updateDownloadList(_ list: [FileMetaData]) {
+        downloadList.append(contentsOf: list)
+    }
+    
     func download(from fileMetaData: FileMetaData) {
         downloadList.append(fileMetaData)
         createRange(from: fileMetaData)

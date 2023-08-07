@@ -46,6 +46,9 @@ class DownloadManagerViewModel {
             let fileSizeString = "\(fileSize) MB"
             return DownloadCellModel(id: fileSaved.id.uuidString, fileName: fileSaved.name, fileSize: fileSizeString, state: fileSaved.status, progress: fileSaved.progress)
         })
+        
+        let listFileMetaData = listDownloadSaved.map({ FileMetaData(id: $0.id, url: $0.url, name: $0.name, size: $0.size, saveLocation: $0.saveLocation, state: $0.status)})
+        downloader.updateDownloadList(listFileMetaData)
     }
 
     var numbersOfItems: Int {
