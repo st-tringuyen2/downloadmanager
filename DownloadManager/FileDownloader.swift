@@ -41,6 +41,17 @@ class FileDownloader: NSObject, Downloader {
     
     func updateDownloadList(_ list: [FileMetaData]) {
         downloadList.append(contentsOf: list)
+        list.forEach { fileMetaData in
+            createRange(from: fileMetaData)
+        }
+    }
+    
+    private func updateFileDownload(from id: UUID, with part: Int) {
+        if fileDownloads[id] == nil {
+            fileDownloads[id] = [part]
+        } else {
+            fileDownloads[id]?.append(part)
+        }
     }
     
     func download(from fileMetaData: FileMetaData) {
@@ -113,6 +124,10 @@ extension FileDownloader: DownloadClientDelegate {
         moveFile(from: location, with: id, at: part)
         removeCompletePartDownload(id, part)
         checkDownloadFinish(for: id)
+    }
+    
+    func restoreDownloadSession(for id: UUID, part: Int) {
+        
     }
 }
 

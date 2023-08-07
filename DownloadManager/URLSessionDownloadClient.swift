@@ -11,6 +11,7 @@ protocol DownloadClientDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID, at part: Int)
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int)
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int)
+    func restoreDownloadSession(for id: UUID, part: Int)
 }
 
 class URLSessionDownloadClient: NSObject, DownloadClient {
@@ -32,19 +33,21 @@ class URLSessionDownloadClient: NSObject, DownloadClient {
     }
     
     private func restoreDownloadSession() {
-        session.getAllTasks { tasks in
+        session.getAllTasks { [weak self] tasks in
             tasks.forEach { task in
                 guard task.state != .completed else { return }
                 if let error = task.error as? NSError {
                     let userInfo = error.userInfo
                     if let downloadTask = task as? URLSessionDownloadTask, let resumeData = userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
-                        if let (id, part) = self.createUUIDAndPart(from: downloadTask) {
-                            self.updateActiveDownloadTask(id, part, downloadTask)
-                            self.updateResumeData(id, resumeData, part)
+                        if let (id, part) = self?.createUUIDAndPart(from: downloadTask) {
+                            self?.updateActiveDownloadTask(id, part, downloadTask)
+                            self?.updateResumeData(id, resumeData, part)
+                            self?.delegate?.restoreDownloadSession(for: id, part: part)
                         }
                     }
-                } else if let downloadTask = task as? URLSessionDownloadTask, let (id, part) = self.createUUIDAndPart(from: downloadTask) {
-                    self.updateActiveDownloadTask(id, part, downloadTask)
+                } else if let downloadTask = task as? URLSessionDownloadTask, let (id, part) = self?.createUUIDAndPart(from: downloadTask) {
+                    self?.updateActiveDownloadTask(id, part, downloadTask)
+                    self?.delegate?.restoreDownloadSession(for: id, part: part)
                 }
             }
         }

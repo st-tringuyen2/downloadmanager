@@ -36,6 +36,7 @@ class DownloadCell: UITableViewCell {
         fileNameLabel.text = model.fileName
         fileSizeLabel.text = model.fileSize
         updateButtonState(with: model.state)
+        updateDownloadState(model.state)
     }
     
     func updateProgress(_ progress: Float) {
