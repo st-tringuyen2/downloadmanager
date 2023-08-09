@@ -7,12 +7,6 @@
 
 import Foundation
 
-protocol DownloadDelegate: AnyObject {
-    func didComplete(with error: Error, for id: UUID)
-    func downloadingProgess(_ progress: Float, for id: UUID)
-    func didFinishDownloading(for id: UUID)
-}
-
 class FileDownloader: NSObject, Downloader {
     
     public enum Error: Swift.Error {

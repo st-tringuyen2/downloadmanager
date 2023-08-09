@@ -22,6 +22,7 @@
 		E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */; };
 		E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */; };
 		E4A05B302A809301002928C0 /* HLSDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A05B2F2A809301002928C0 /* HLSDownloader.swift */; };
+		E4CA3C862A83245A00D2A611 /* HLSDownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CA3C852A83245A00D2A611 /* HLSDownloadClient.swift */; };
 		E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51C2A793B10002314C7 /* Downloader.swift */; };
 		E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */; };
 		E4D5A5222A795A5F002314C7 /* URLSessionDownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */; };
@@ -47,6 +48,7 @@
 		E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerComposer.swift; sourceTree = "<group>"; };
 		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; };
 		E4A05B2F2A809301002928C0 /* HLSDownloader.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = HLSDownloader.swift; sourceTree = "<group>"; tabWidth = 4; };
+		E4CA3C852A83245A00D2A611 /* HLSDownloadClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HLSDownloadClient.swift; sourceTree = "<group>"; };
 		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -145,6 +147,24 @@
 			name = "UI Composers";
 			sourceTree = "<group>";
 		};
+		E4CA3C872A83245E00D2A611 /* HLSDownload */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBFC1E2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift */,
+				E4CA3C852A83245A00D2A611 /* HLSDownloadClient.swift */,
+			);
+			name = HLSDownload;
+			sourceTree = "<group>";
+		};
+		E4CA3C882A83247000D2A611 /* FIleDownload */ = {
+			isa = PBXGroup;
+			children = (
+				E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */,
+				E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */,
+			);
+			name = FIleDownload;
+			sourceTree = "<group>";
+		};
 		E4D5A51B2A793AFD002314C7 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
@@ -158,9 +178,8 @@
 		E4D5A5202A795A55002314C7 /* Clients */ = {
 			isa = PBXGroup;
 			children = (
-				E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */,
-				E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */,
-				E4EBFC1E2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift */,
+				E4CA3C882A83247000D2A611 /* FIleDownload */,
+				E4CA3C872A83245E00D2A611 /* HLSDownload */,
 			);
 			name = Clients;
 			sourceTree = "<group>";
@@ -238,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4CA3C862A83245A00D2A611 /* HLSDownloadClient.swift in Sources */,
 				E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */,
 				E4EBFC1F2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift in Sources */,
 				E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */,
