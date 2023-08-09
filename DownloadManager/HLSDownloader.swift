@@ -47,8 +47,4 @@ extension HLSDownloader: HLSDownloadClientDelegate {
     func didFinishDownloading(for id: UUID) {
         delegate?.didFinishDownloading(for: id)
     }
-    
-    func restoreDownloadSession(for id: UUID) {
-        
-    }
 }

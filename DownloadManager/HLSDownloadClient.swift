@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+protocol HLSDownloadClient {
+    func download(from fileMetaData: FileMetaData)
+}

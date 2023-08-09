@@ -121,7 +121,7 @@ extension FileDownloader: FileDownloadClientDelegate {
     }
     
     func restoreDownloadSession(for id: UUID, part: Int) {
-        
+        updateFileDownload(from: id, with: part)
     }
 }
 

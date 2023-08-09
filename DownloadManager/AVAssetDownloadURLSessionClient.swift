@@ -7,17 +7,11 @@
 
 import AVFoundation
 
-
-protocol HLSDownloadClient {
-    func download(from fileMetaData: FileMetaData)
-}
-
 protocol HLSDownloadClientDelegate: AnyObject {
     func willDownload(to location: URL, for id: UUID)
     func didComplete(with error: Error, for id: UUID)
     func downloadingProgress(_ progress: Float, for id: UUID)
     func didFinishDownloading(for id: UUID)
-    func restoreDownloadSession(for id: UUID)
 }
 
 class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
@@ -32,10 +26,35 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
     
     weak var delegate: HLSDownloadClientDelegate?
     
+    override init() {
+        super.init()
+        restoreDownloadSession()
+    }
+    
+    private func restoreDownloadSession() {
+        downloadSession.getAllTasks { [weak self] tasks in
+            tasks.forEach { task in
+                guard task.state != .completed else { return }
+                if let error = task.error {
+                    if let downloadTask = task as? AVAggregateAssetDownloadTask {
+                        if let id = UUID(uuidString: downloadTask.taskDescription ?? "") {
+                            self?.activeDownloadsMap[id] = downloadTask
+                            self?.delegate?.didComplete(with: error, for: id)
+                        }
+                    }
+                } else if let downloadTask = task as? AVAggregateAssetDownloadTask {
+                    if let id = UUID(uuidString: downloadTask.taskDescription ?? "") {
+                        self?.activeDownloadsMap[id] = downloadTask
+                    }
+                }
+            }
+        }
+    }
+    
     func download(from fileMetaData: FileMetaData) {
         let asset = AVURLAsset(url: fileMetaData.url)
         let preferredMediaSelection = asset.preferredMediaSelection
-
+        
         guard let downloadTask = downloadSession.aggregateAssetDownloadTask(with: asset, mediaSelections: [preferredMediaSelection], assetTitle: fileMetaData.name, assetArtworkData: nil) else { return }
         downloadTask.taskDescription = fileMetaData.id.uuidString
         downloadTask.resume()
@@ -56,7 +75,7 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
         for value in loadedTimeRanges {
             let loadedTimeRange: CMTimeRange = value.timeRangeValue
             percentComplete +=
-                loadedTimeRange.duration.seconds / timeRangeExpectedToLoad.duration.seconds
+            loadedTimeRange.duration.seconds / timeRangeExpectedToLoad.duration.seconds
         }
         print("Downloading progress: \(percentComplete)")
         if let id = getUUID(from: aggregateAssetDownloadTask) {
