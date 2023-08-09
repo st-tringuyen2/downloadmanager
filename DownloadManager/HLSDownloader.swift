@@ -27,3 +27,27 @@ class HLSDownloader: Downloader {
         downloadList.append(contentsOf: list)
     }
 }
+
+extension HLSDownloader: HLSDownloadClientDelegate {
+    func willDownload(to location: URL, for id: UUID) {
+        if let index = downloadList.firstIndex(where:  { $0.id == id }) {
+            downloadList[index].saveLocation = location
+        }
+    }
+    
+    func didComplete(with error: Error, for id: UUID) {
+        delegate?.didComplete(with: error, for: id)
+    }
+    
+    func downloadingProgress(_ progress: Float, for id: UUID) {
+        delegate?.downloadingProgess(progress, for: id)
+    }
+    
+    func didFinishDownloading(for id: UUID) {
+        delegate?.didFinishDownloading(for: id)
+    }
+    
+    func restoreDownloadSession(for id: UUID) {
+        
+    }
+}

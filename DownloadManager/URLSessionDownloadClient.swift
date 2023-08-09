@@ -14,14 +14,6 @@ protocol FileDownloadClientDelegate: AnyObject {
     func restoreDownloadSession(for id: UUID, part: Int)
 }
 
-protocol HLSDownloadClientDelegate: AnyObject {
-    func willDownload(to location: URL, for id: UUID)
-    func didComplete(with error: Error, for id: UUID)
-    func downloadingProgress(_ progress: Float, for id: UUID)
-    func didFinishDownloading(to location: URL, for id: UUID)
-    func restoreDownloadSession(for id: UUID)
-}
-
 class URLSessionDownloadClient: NSObject, FileDownloadClient {
     private var activeDownloadsMap = [UUID: [Int: URLSessionDownloadTask]]()
     private var resumeData = [UUID: [Int: Data]]()

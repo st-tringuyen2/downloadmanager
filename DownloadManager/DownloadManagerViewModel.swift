@@ -93,8 +93,8 @@ extension DownloadManagerViewModel: DownloadDelegate {
         }
     }
     
-    func didFinishDownloading(to location: URL, for id: UUID) {
-        print("finish download to \(location)")
+    func didFinishDownloading(for id: UUID) {
+        print("finish download for id: \(id)")
         downloadStore.updateDownloadStatus(.downloaded, for: id)
     }
 }

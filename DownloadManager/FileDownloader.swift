@@ -10,7 +10,7 @@ import Foundation
 protocol DownloadDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID)
     func downloadingProgess(_ progress: Float, for id: UUID)
-    func didFinishDownloading(to location: URL, for id: UUID)
+    func didFinishDownloading(for id: UUID)
 }
 
 class FileDownloader: NSObject, Downloader {
@@ -161,7 +161,7 @@ extension FileDownloader {
         if let locations = downloadPartLocations[id], let saveLocation = downloadList.first(where: { $0.id == id })?.saveLocation {
             do {
                 try writeDataToFile(from: locations, to: saveLocation)
-                delegate?.didFinishDownloading(to: saveLocation, for: id)
+                delegate?.didFinishDownloading(for: id)
             } catch {
                 debugPrint("Try to write data to file \(saveLocation) but failed with \(error)")
                 delegate?.didComplete(with: FileDownloader.Error.mergeFileError, for: id)

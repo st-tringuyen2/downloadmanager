@@ -7,6 +7,19 @@
 
 import AVFoundation
 
+
+protocol HLSDownloadClient {
+    func download(from fileMetaData: FileMetaData)
+}
+
+protocol HLSDownloadClientDelegate: AnyObject {
+    func willDownload(to location: URL, for id: UUID)
+    func didComplete(with error: Error, for id: UUID)
+    func downloadingProgress(_ progress: Float, for id: UUID)
+    func didFinishDownloading(for id: UUID)
+    func restoreDownloadSession(for id: UUID)
+}
+
 class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
     private var activeDownloadsMap = [UUID: AVAggregateAssetDownloadTask]()
     
@@ -53,8 +66,12 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         print("Download did complete with error: \(String(describing: error))")
-        if let assetDownloadTask = task as? AVAggregateAssetDownloadTask, let id = getUUID(from: assetDownloadTask), let error = error {
+        guard let assetDownloadTask = task as? AVAggregateAssetDownloadTask, let id = getUUID(from: assetDownloadTask) else { return }
+        
+        if let error = error {
             delegate?.didComplete(with: error, for: id)
+        } else {
+            delegate?.didFinishDownloading(for: id)
         }
     }
     

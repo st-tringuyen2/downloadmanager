@@ -44,7 +44,7 @@ struct FileMetaData {
     let url: URL
     let name: String
     let size: Int
-    let saveLocation: URL
+    var saveLocation: URL
     var state: DownloadState
     var progress: Float?
 }
