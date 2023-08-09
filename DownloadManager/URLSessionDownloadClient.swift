@@ -7,14 +7,22 @@
 
 import Foundation
 
-protocol DownloadClientDelegate: AnyObject {
+protocol FileDownloadClientDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID, at part: Int)
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int)
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int)
     func restoreDownloadSession(for id: UUID, part: Int)
 }
 
-class URLSessionDownloadClient: NSObject, DownloadClient {
+protocol HLSDownloadClientDelegate: AnyObject {
+    func willDownload(to location: URL, for id: UUID)
+    func didComplete(with error: Error, for id: UUID)
+    func downloadingProgress(_ progress: Float, for id: UUID)
+    func didFinishDownloading(to location: URL, for id: UUID)
+    func restoreDownloadSession(for id: UUID)
+}
+
+class URLSessionDownloadClient: NSObject, FileDownloadClient {
     private var activeDownloadsMap = [UUID: [Int: URLSessionDownloadTask]]()
     private var resumeData = [UUID: [Int: Data]]()
 
@@ -25,7 +33,7 @@ class URLSessionDownloadClient: NSObject, DownloadClient {
         return session
     }()
     
-    weak var delegate: DownloadClientDelegate?
+    weak var delegate: FileDownloadClientDelegate?
     
     override init() {
         super.init()

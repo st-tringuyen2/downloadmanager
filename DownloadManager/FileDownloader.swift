@@ -32,9 +32,9 @@ class FileDownloader: NSObject, Downloader {
     private let fileManager: FileManager
     
     public weak var delegate: DownloadDelegate?
-    private let client: DownloadClient
+    private let client: FileDownloadClient
     
-    init(client: DownloadClient, fileManager: FileManager = .default) {
+    init(client: FileDownloadClient, fileManager: FileManager = .default) {
         self.client = client
         self.fileManager = fileManager
     }
@@ -105,7 +105,7 @@ class FileDownloader: NSObject, Downloader {
     }
 }
 
-extension FileDownloader: DownloadClientDelegate {
+extension FileDownloader: FileDownloadClientDelegate {
     func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
         removeCompletePartDownload(id, part)
         checkDownloadFinish(for: id)

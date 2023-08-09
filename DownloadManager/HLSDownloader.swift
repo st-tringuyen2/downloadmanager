@@ -13,9 +13,9 @@ class HLSDownloader: Downloader {
     private var downloadList = [FileMetaData]()
     private var downloadLocations = [UUID: URL]()
     
-    private let client: DownloadClient
+    private let client: HLSDownloadClient
     
-    init(client: DownloadClient) {
+    init(client: HLSDownloadClient) {
         self.client = client
     }
     

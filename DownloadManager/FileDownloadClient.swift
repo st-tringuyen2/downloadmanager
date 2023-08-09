@@ -12,10 +12,10 @@ public struct HTTPRangeRequestHeader: Hashable {
     let end: Int
 }
 
-protocol DownloadClient {
+protocol FileDownloadClient {
     func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?)
 }
 
-extension DownloadClient {
-    func download(from fileMetaData: FileMetaData, for part: Int = 0, with range: HTTPRangeRequestHeader? = nil) {}
+protocol HLSDownloadClient {
+    func download(from fileMetaData: FileMetaData)
 }

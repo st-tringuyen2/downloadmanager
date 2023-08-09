@@ -25,7 +25,8 @@
 		E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51C2A793B10002314C7 /* Downloader.swift */; };
 		E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */; };
 		E4D5A5222A795A5F002314C7 /* URLSessionDownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */; };
-		E4D5A5242A795AB2002314C7 /* DownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5232A795AB2002314C7 /* DownloadClient.swift */; };
+		E4D5A5242A795AB2002314C7 /* FileDownloadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */; };
+		E4EBFC1F2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBFC1E2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,8 +49,9 @@
 		E4A05B2F2A809301002928C0 /* HLSDownloader.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = HLSDownloader.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
-		E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionDownloadClient.swift; sourceTree = "<group>"; };
-		E4D5A5232A795AB2002314C7 /* DownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = DownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };
+		E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };
+		E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };
+		E4EBFC1E2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = AVAssetDownloadURLSessionClient.swift; sourceTree = "<group>"; tabWidth = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,8 +158,9 @@
 		E4D5A5202A795A55002314C7 /* Clients */ = {
 			isa = PBXGroup;
 			children = (
-				E4D5A5232A795AB2002314C7 /* DownloadClient.swift */,
+				E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */,
 				E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */,
+				E4EBFC1E2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift */,
 			);
 			name = Clients;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4D5A51D2A793B10002314C7 /* Downloader.swift in Sources */,
+				E4EBFC1F2A81D6610067638E /* AVAssetDownloadURLSessionClient.swift in Sources */,
 				E43ED5252A77BFCC0075D1D6 /* DownloadManagerViewController.swift in Sources */,
 				E43ED5312A77E9A90075D1D6 /* NewDownloadViewController.swift in Sources */,
 				E43ED5342A7898F40075D1D6 /* DownloadManagerViewModel.swift in Sources */,
@@ -243,7 +247,7 @@
 				E43ED5372A789CB00075D1D6 /* DownloadManagerComposer.swift in Sources */,
 				E43ED5142A77BF730075D1D6 /* ViewController.swift in Sources */,
 				E43ED5102A77BF730075D1D6 /* AppDelegate.swift in Sources */,
-				E4D5A5242A795AB2002314C7 /* DownloadClient.swift in Sources */,
+				E4D5A5242A795AB2002314C7 /* FileDownloadClient.swift in Sources */,
 				E4D5A51F2A793B3D002314C7 /* FileDownloader.swift in Sources */,
 				E488ABCC2A78B518003DAEBF /* NewDowloadViewModel.swift in Sources */,
 				E43ED52C2A77C8780075D1D6 /* DownloadCell.swift in Sources */,
