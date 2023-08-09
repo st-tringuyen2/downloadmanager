@@ -21,6 +21,7 @@ class HLSDownloader: Downloader {
     
     func download(from fileMetaData: FileMetaData) {
         client.download(from: fileMetaData)
+        downloadList.append(fileMetaData)
     }
     
     func updateDownloadList(_ list: [FileMetaData]) {
