@@ -34,12 +34,10 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
     private func restoreDownloadSession() {
         downloadSession.getAllTasks { [weak self] tasks in
             tasks.forEach { task in
-                guard task.state != .completed else { return }
-                if let error = task.error {
+                if task.error != nil {
                     if let downloadTask = task as? AVAggregateAssetDownloadTask {
                         if let id = UUID(uuidString: downloadTask.taskDescription ?? "") {
                             self?.activeDownloadsMap[id] = downloadTask
-                            self?.delegate?.didComplete(with: error, for: id)
                         }
                     }
                 } else if let downloadTask = task as? AVAggregateAssetDownloadTask {

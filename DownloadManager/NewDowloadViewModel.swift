@@ -69,7 +69,7 @@ class NewDowloadViewModel {
     }
     
     private lazy var downloasdDirectory: URL = {
-        let url = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)
+        let url = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)
         
         return url.first!
     }()

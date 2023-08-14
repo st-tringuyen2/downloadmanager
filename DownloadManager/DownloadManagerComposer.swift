@@ -18,27 +18,40 @@ extension UserDefaults: DownloadStore {
         return fileSaved ?? []
     }
     
+    private func save(_ files: [FileSave]) {
+        let encoder = JSONEncoder()
+        if let fileEncoded = try? encoder.encode(files) {
+            setValue(fileEncoded, forKey: "file-download-key")
+        }
+    }
+    
     func saveDownloadFile(_ file: FileSave) {
         var fileData = getDownloadList()
         fileData.insert(file, at: 0)
-
-        let encoder = JSONEncoder()
-        if let fileEncoded = try? encoder.encode(fileData) {
-            setValue(fileEncoded, forKey: "file-download-key")
+        
+        save(fileData)
+    }
+  
+    func updateDownloadFile(_ file: FileSave) {
+        var fileData = getDownloadList()
+        
+        if let index = fileData.firstIndex(where: { $0.id == file.id }) {
+            fileData[index] = file
+            save(fileData)
         }
     }
     
     func updateProgress(_ progress: Float, for fileID: UUID) {
         if var savedFile = getFileSaved(from: fileID) {
             savedFile.progress = progress
-            saveDownloadFile(savedFile)
+            updateDownloadFile(savedFile)
         }
     }
     
     func updateDownloadStatus(_ status: DownloadState, for fileID: UUID) {
         if var savedFile = getFileSaved(from: fileID) {
             savedFile.status = status
-            saveDownloadFile(savedFile)
+            updateDownloadFile(savedFile)
         }
     }
     

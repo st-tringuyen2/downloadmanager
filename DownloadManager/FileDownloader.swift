@@ -101,6 +101,7 @@ class FileDownloader: NSObject, Downloader {
 
 extension FileDownloader: FileDownloadClientDelegate {
     func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
+        guard (error as NSError).code != NSURLErrorCancelled else { return }
         removeCompletePartDownload(id, part)
         checkDownloadFinish(for: id)
     }

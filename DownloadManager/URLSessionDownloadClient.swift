@@ -35,7 +35,6 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
     private func restoreDownloadSession() {
         session.getAllTasks { [weak self] tasks in
             tasks.forEach { task in
-                guard task.state != .completed else { return }
                 if let error = task.error as? NSError {
                     let userInfo = error.userInfo
                     if let downloadTask = task as? URLSessionDownloadTask, let resumeData = userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
