@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Downloader/Downloader.xcodeproj">
+      location = "container:STDownloader/STDownloader.xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:DownloadManager.xcodeproj">
+      location = "group:DownloadManager.xcodeproj">
    </FileRef>
 </Workspace>

@@ -6,14 +6,7 @@
 //
 
 import UIKit
-
-enum DownloadState: Int, Codable {
-    case notDownload
-    case downloading
-    case pause
-    case downloaded
-    case failed
-}
+import STDownloader
 
 struct DownloadCellModel {
     let id: String

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import STDownloader
 
 class NewDownloadViewController: UIViewController {
     private struct UnExpectedRepresentError: Error {}

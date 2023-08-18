@@ -8,20 +8,20 @@
 import Foundation
 
 
-protocol FileDownloadClientDelegate: AnyObject {
+public protocol FileDownloadClientDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID, at part: Int)
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int)
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int)
     func restoreDownloadSession(for id: UUID, part: Int)
 }
 
-class URLSessionDownloadClient: NSObject, FileDownloadClient {
+public class URLSessionDownloadClient: NSObject, FileDownloadClient {
     
     struct ResumeError: Error {}
     
     private var activeDownloadsMap = [UUID: [Int: URLSessionDownloadTask]]()
     private var resumeData = [UUID: [Int: Data]]()
-
+    
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: "ST-Download-Manager-Download-Session")
         let session = URLSession(configuration: config, delegate: self, delegateQueue: .none)
@@ -29,9 +29,9 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
         return session
     }()
     
-    weak var delegate: FileDownloadClientDelegate?
+    public weak var delegate: FileDownloadClientDelegate?
     
-    override init() {
+    override public init() {
         super.init()
         restoreDownloadSession()
     }
@@ -76,7 +76,7 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
         }
     }
     
-    func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?) {
+    public func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?) {
         var request = URLRequest(url: fileMetaData.url)
         if let range = range {
             request.setValue("bytes=\(range.start)-\(range.end)", forHTTPHeaderField: "Range")
@@ -87,7 +87,7 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
         updateActiveDownloadTask(fileMetaData.id, part, downloadTask)
     }
     
-    func pause(id: UUID) {
+    public func pause(id: UUID) {
         if let activateDownload = activeDownloadsMap[id] {
             for (_, task) in activateDownload {
                 task.cancel()
@@ -95,7 +95,7 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
         }
     }
     
-    func resume(id: UUID, with ranges: [HTTPRangeRequestHeader]?) {
+    public func resume(id: UUID, with ranges: [HTTPRangeRequestHeader]?) {
         if let resumeData = resumeData[id] {
             for (index, data) in resumeData {
                 let task = session.downloadTask(withResumeData: data)
@@ -116,7 +116,7 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
 
 extension URLSessionDownloadClient: URLSessionDownloadDelegate {
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         guard let error = error as? NSError, let (uuid, part) = createUUIDAndPart(from: task) else { return }
         
         let userInfo = (error as NSError).userInfo
@@ -127,13 +127,13 @@ extension URLSessionDownloadClient: URLSessionDownloadDelegate {
         delegate?.didComplete(with: error, for: uuid, at: part)
     }
     
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         if let (uuid, part) = createUUIDAndPart(from: downloadTask) {
             delegate?.didFinishDownloading(to: location, for: uuid, at: part)
         }
     }
     
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let calculatedProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
         
         if let (uuid, part) = createUUIDAndPart(from: downloadTask) {
@@ -143,14 +143,14 @@ extension URLSessionDownloadClient: URLSessionDownloadDelegate {
 }
 
 
-class URLSessionHTTPClient: HTTPClient {
+public class URLSessionHTTPClient: HTTPClient {
     private var session: URLSession
     
-    init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared) {
         self.session = session
     }
     
-    func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
+    public func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         session.dataTask(with: request) { data, response, error in
@@ -166,11 +166,11 @@ class URLSessionHTTPClient: HTTPClient {
     }
 }
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case GET
     case HEAD
 }
 
-protocol HTTPClient {
+public protocol HTTPClient {
     func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
 }

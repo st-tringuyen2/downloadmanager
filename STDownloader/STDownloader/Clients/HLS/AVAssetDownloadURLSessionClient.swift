@@ -8,14 +8,14 @@
 import AVFoundation
 import UserNotifications
 
-protocol HLSDownloadClientDelegate: AnyObject {
+public protocol HLSDownloadClientDelegate: AnyObject {
     func willDownload(to location: URL, for id: UUID)
     func didComplete(with error: Error, for id: UUID)
     func downloadingProgress(_ progress: Float, for id: UUID)
     func didFinishDownloading(for id: UUID)
 }
 
-class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
+public class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
     
     private var activeDownloadsMap = [UUID: AVAggregateAssetDownloadTask]()
     
@@ -26,9 +26,13 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
         return session
     }()
     
-    weak var delegate: HLSDownloadClientDelegate?
+    public override init() {
+        super.init()
+    }
     
-    func download(from fileMetaData: FileMetaData) {
+    public weak var delegate: HLSDownloadClientDelegate?
+    
+    public func download(from fileMetaData: FileMetaData) {
         let asset = AVURLAsset(url: fileMetaData.url)
         let preferredMediaSelection = asset.preferredMediaSelection
         
@@ -38,17 +42,17 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
         activeDownloadsMap[fileMetaData.id] = downloadTask
     }
     
-    func pause(id: UUID) {
+    public func pause(id: UUID) {
         let task = activeDownloadsMap.first(where: { $0.key == id })?.value
         task?.suspend()
     }
     
-    func resume(id: UUID) {
+    public func resume(id: UUID) {
         let task = activeDownloadsMap.first(where: { $0.key == id })?.value
         task?.resume()
     }
     
-    func resume(fileMetaData: FileMetaData) {
+    public func resume(fileMetaData: FileMetaData) {
         if let task = activeDownloadsMap.first(where: { $0.key == fileMetaData.id })?.value, task.state == .suspended {
             task.resume()
         } else {
@@ -64,14 +68,14 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
 }
 
 extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
-    func urlSession(_ session: URLSession, aggregateAssetDownloadTask: AVAggregateAssetDownloadTask, willDownloadTo location: URL) {
+    public func urlSession(_ session: URLSession, aggregateAssetDownloadTask: AVAggregateAssetDownloadTask, willDownloadTo location: URL) {
         print("Will download to: \(location)")
         if let id = getUUID(from: aggregateAssetDownloadTask) {
             delegate?.willDownload(to: location, for: id)
         }
     }
     
-    func urlSession(_ session: URLSession, aggregateAssetDownloadTask: AVAggregateAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange, for mediaSelection: AVMediaSelection) {
+    public func urlSession(_ session: URLSession, aggregateAssetDownloadTask: AVAggregateAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange, for mediaSelection: AVMediaSelection) {
         var percentComplete = 0.0
         for value in loadedTimeRanges {
             let loadedTimeRange: CMTimeRange = value.timeRangeValue
@@ -84,7 +88,7 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
         }
     }
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         print("Download did complete with error: \(String(describing: error))")
         guard let assetDownloadTask = task as? AVAggregateAssetDownloadTask, let id = getUUID(from: assetDownloadTask) else { return }
         
@@ -96,13 +100,13 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
         }
     }
     
-    func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
+    public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
         print("Did finish download to \(location)")
     }
 }
 
 extension AVAssetDownloadURLSessionClient {
-    func getUUID(from task: AVAggregateAssetDownloadTask) -> UUID? {
+    private func getUUID(from task: AVAggregateAssetDownloadTask) -> UUID? {
         return activeDownloadsMap.first(where: { $0.value === task })?.key
     }
 }

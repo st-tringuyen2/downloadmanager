@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Downloader
+import STDownloader
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -17,8 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let client = URLSessionDownloadClient()
-        let downloader = FileDownloader(client: client)
+        let client = AVAssetDownloadURLSessionClient()
+        let downloader = HLSDownloader(client: client)
         client.delegate = downloader
         let downloadManagerViewController = DownloadManagerComposer.makeDownloadManagerViewController(downloader: downloader)
         navigationController = UINavigationController(rootViewController: downloadManagerViewController)

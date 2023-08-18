@@ -6,48 +6,7 @@
 //
 
 import Foundation
-
-class URLSessionHTTPClient: HTTPClient {
-    private var session: URLSession
-    
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
-    
-    func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        session.dataTask(with: request) { data, response, error in
-            if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success((data, response)))
-                return
-            }
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-        }.resume()
-    }
-}
-
-enum HTTPMethod: String {
-    case GET
-    case HEAD
-}
-
-protocol HTTPClient {
-    func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
-}
-
-struct FileMetaData {
-    let id: UUID
-    let url: URL
-    let name: String
-    let size: Int
-    var saveLocation: URL
-    var state: DownloadState
-    var progress: Float?
-}
+import STDownloader
 
 class NewDowloadViewModel {
     

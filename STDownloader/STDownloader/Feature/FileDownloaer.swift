@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FileDownloader: NSObject, Downloader {
+public class FileDownloader: NSObject, Downloader {
     
     public enum Error: Swift.Error {
         case mergeFileError
@@ -28,12 +28,12 @@ class FileDownloader: NSObject, Downloader {
     public weak var delegate: DownloadDelegate?
     private let client: FileDownloadClient
     
-    init(client: FileDownloadClient, fileManager: FileManager = .default) {
+    public init(client: FileDownloadClient, fileManager: FileManager = .default) {
         self.client = client
         self.fileManager = fileManager
     }
     
-    func updateDownloadList(_ list: [FileMetaData]) {
+    public func updateDownloadList(_ list: [FileMetaData]) {
         downloadList.append(contentsOf: list)
         list.forEach { fileMetaData in
             createRange(from: fileMetaData)
@@ -57,17 +57,17 @@ class FileDownloader: NSObject, Downloader {
         }
     }
     
-    func download(from fileMetaData: FileMetaData) {
+    public func download(from fileMetaData: FileMetaData) {
         downloadList.append(fileMetaData)
         createRange(from: fileMetaData)
         startDownload(from: fileMetaData)
     }
     
-    func pause(id: UUID) {
+    public func pause(id: UUID) {
         client.pause(id: id)
     }
     
-    func resume(id: UUID) {
+    public func resume(id: UUID) {
         let ranges = rangeRequests[id]
         client.resume(id: id, with: ranges)
     }
@@ -118,14 +118,14 @@ class FileDownloader: NSObject, Downloader {
 }
 
 extension FileDownloader: FileDownloadClientDelegate {
-    func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
+    public func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
         removeCompletePartDownload(id, part)
         if checkDownloadFinish(for: id) {
             delegate?.didComplete(with: error, for: id)
         }
     }
     
-    func downloadingProgress(_ progress: Float, for id: UUID, at part: Int) {
+    public func downloadingProgress(_ progress: Float, for id: UUID, at part: Int) {
         if downloadProgress[id] == nil {
             downloadProgress[id] = [part: progress]
         } else {
@@ -134,7 +134,7 @@ extension FileDownloader: FileDownloadClientDelegate {
         delegate?.downloadingProgess(totalDownloadProgress(for: id), for: id)
     }
     
-    func didFinishDownloading(to location: URL, for id: UUID, at part: Int) {
+    public func didFinishDownloading(to location: URL, for id: UUID, at part: Int) {
         moveFile(from: location, with: id, at: part)
         removeCompletePartDownload(id, part)
         if checkDownloadFinish(for: id) {
@@ -146,8 +146,8 @@ extension FileDownloader: FileDownloadClientDelegate {
         }
     }
     
-    func restoreDownloadSession(for id: UUID, part: Int) {
-//        updateFileDownload(from: id, with: part)
+    public func restoreDownloadSession(for id: UUID, part: Int) {
+        //        updateFileDownload(from: id, with: part)
     }
 }
 

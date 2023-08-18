@@ -7,32 +7,32 @@
 
 import Foundation
 
-class HLSDownloader: Downloader {
-    var delegate: DownloadDelegate?
+public class HLSDownloader: NSObject, Downloader {
+    public weak var delegate: DownloadDelegate?
     
     private var downloadList = [FileMetaData]()
     private var downloadLocations = [UUID: URL]()
     
     private let client: HLSDownloadClient
     
-    init(client: HLSDownloadClient) {
+    public init(client: HLSDownloadClient) {
         self.client = client
     }
     
-    func download(from fileMetaData: FileMetaData) {
+    public func download(from fileMetaData: FileMetaData) {
         client.download(from: fileMetaData)
         downloadList.append(fileMetaData)
     }
     
-    func pause(id: UUID) {
+    public func pause(id: UUID) {
         client.pause(id: id)
     }
     
-    func resume(id: UUID) {
+    public func resume(id: UUID) {
         client.resume(id: id)
     }
     
-    func updateDownloadList(_ list: [FileMetaData]) {
+    public func updateDownloadList(_ list: [FileMetaData]) {
         downloadList.append(contentsOf: list)
         list.forEach { fileMetaData in
             if fileMetaData.state == .downloading {
@@ -43,22 +43,22 @@ class HLSDownloader: Downloader {
 }
 
 extension HLSDownloader: HLSDownloadClientDelegate {
-    func willDownload(to location: URL, for id: UUID) {
+    public func willDownload(to location: URL, for id: UUID) {
         if let index = downloadList.firstIndex(where:  { $0.id == id }) {
             downloadList[index].saveLocation = location
             delegate?.willDownloadTo(location: location, for: id)
         }
     }
     
-    func didComplete(with error: Error, for id: UUID) {
+    public func didComplete(with error: Error, for id: UUID) {
         delegate?.didComplete(with: error, for: id)
     }
     
-    func downloadingProgress(_ progress: Float, for id: UUID) {
+    public func downloadingProgress(_ progress: Float, for id: UUID) {
         delegate?.downloadingProgess(progress, for: id)
     }
     
-    func didFinishDownloading(for id: UUID) {
+    public func didFinishDownloading(for id: UUID) {
         delegate?.didFinishDownloading(for: id)
     }
 }

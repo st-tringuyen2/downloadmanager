@@ -6,25 +6,7 @@
 //
 
 import Foundation
-import Downloader
-
-struct FileSave: Codable {
-    let id: UUID
-    let name: String
-    let size: Int
-    let url: URL
-    var saveLocation: URL
-    var progress: Float
-    var status: DownloadState
-}
-
-protocol DownloadStore {
-    func getDownloadList() -> [FileSave]
-    func saveDownloadFile(_ file: FileSave)
-    func updateProgress(_ progress: Float, for fileID: UUID)
-    func updateDownloadStatus(_ status: DownloadState, for fileID: UUID)
-    func updateDownloadLocation(_ location: URL, for fileID: UUID)
-}
+import STDownloader
 
 class DownloadManagerViewModel {
     var updateProgress: ((Float, Int) -> Void)?

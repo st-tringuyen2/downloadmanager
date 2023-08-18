@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol HLSDownloadClient {
+public protocol HLSDownloadClient {
     func download(from fileMetaData: FileMetaData)
     func pause(id: UUID)
     func resume(id: UUID)

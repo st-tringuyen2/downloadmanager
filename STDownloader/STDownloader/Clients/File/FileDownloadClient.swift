@@ -12,7 +12,7 @@ public struct HTTPRangeRequestHeader: Hashable {
     let end: Int
 }
 
-protocol FileDownloadClient {
+public protocol FileDownloadClient {
     func download(from fileMetaData: FileMetaData, for part: Int, with range: HTTPRangeRequestHeader?)
     func pause(id: UUID)
     func resume(id: UUID, with ranges: [HTTPRangeRequestHeader]?)

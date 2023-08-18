@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import STDownloader
 
 class DownloadManagerViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
