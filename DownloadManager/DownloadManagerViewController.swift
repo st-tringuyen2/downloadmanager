@@ -38,7 +38,9 @@ class DownloadManagerViewController: UIViewController {
         let viewModel = NewDowloadViewModel(httpClient: URLSessionHTTPClient())
         let newDownloadVC = NewDownloadViewController(viewModel: viewModel)
         newDownloadVC.titleLabelText = "New Download"
-        newDownloadVC.onStartDownload = { [weak self] fileMetaData in
+        newDownloadVC.onStartDownload = { [weak self] fileDownload in
+            var fileMetaData = fileDownload
+            fileMetaData.state = .downloading
             self?.startDownload(from: fileMetaData)
             self?.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
@@ -77,6 +79,13 @@ extension DownloadManagerViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DownloadCell.self)) as! DownloadCell
         let model = viewModel.item(for: indexPath.row)
         cell.updateUI(with: model)
+        cell.onCancelDownload = { [weak self] in
+            
+        }
+        
+        cell.onPauseResumeDownload = { [weak self] in
+            self?.viewModel.pause(from: UUID(uuidString: model.id)!)
+        }
         
         return cell
     }

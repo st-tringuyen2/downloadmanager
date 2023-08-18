@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import UserNotifications
 
 protocol HLSDownloadClientDelegate: AnyObject {
     func willDownload(to location: URL, for id: UUID)
@@ -15,39 +16,17 @@ protocol HLSDownloadClientDelegate: AnyObject {
 }
 
 class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
+    
     private var activeDownloadsMap = [UUID: AVAggregateAssetDownloadTask]()
     
     private lazy var downloadSession: AVAssetDownloadURLSession = {
-        let config = URLSessionConfiguration.background(withIdentifier: "ST-Download-Manager-HLS-Download")
+        let config = URLSessionConfiguration.background(withIdentifier: "ST-Download-Manager-HLS-Download-id")
         let session = AVAssetDownloadURLSession(configuration: config, assetDownloadDelegate: self, delegateQueue: nil)
         
         return session
     }()
     
     weak var delegate: HLSDownloadClientDelegate?
-    
-    override init() {
-        super.init()
-        restoreDownloadSession()
-    }
-    
-    private func restoreDownloadSession() {
-        downloadSession.getAllTasks { [weak self] tasks in
-            tasks.forEach { task in
-                if task.error != nil {
-                    if let downloadTask = task as? AVAggregateAssetDownloadTask {
-                        if let id = UUID(uuidString: downloadTask.taskDescription ?? "") {
-                            self?.activeDownloadsMap[id] = downloadTask
-                        }
-                    }
-                } else if let downloadTask = task as? AVAggregateAssetDownloadTask {
-                    if let id = UUID(uuidString: downloadTask.taskDescription ?? "") {
-                        self?.activeDownloadsMap[id] = downloadTask
-                    }
-                }
-            }
-        }
-    }
     
     func download(from fileMetaData: FileMetaData) {
         let asset = AVURLAsset(url: fileMetaData.url)
@@ -57,6 +36,30 @@ class AVAssetDownloadURLSessionClient: NSObject, HLSDownloadClient {
         downloadTask.taskDescription = fileMetaData.id.uuidString
         downloadTask.resume()
         activeDownloadsMap[fileMetaData.id] = downloadTask
+    }
+    
+    func pause(id: UUID) {
+        let task = activeDownloadsMap.first(where: { $0.key == id })?.value
+        task?.suspend()
+    }
+    
+    func resume(id: UUID) {
+        let task = activeDownloadsMap.first(where: { $0.key == id })?.value
+        task?.resume()
+    }
+    
+    func resume(fileMetaData: FileMetaData) {
+        if let task = activeDownloadsMap.first(where: { $0.key == fileMetaData.id })?.value, task.state == .suspended {
+            task.resume()
+        } else {
+            let asset = AVURLAsset(url: fileMetaData.saveLocation)
+            let preferredMediaSelection = asset.preferredMediaSelection
+            
+            guard let downloadTask = downloadSession.aggregateAssetDownloadTask(with: asset, mediaSelections: [preferredMediaSelection], assetTitle: fileMetaData.name, assetArtworkData: nil) else { return }
+            downloadTask.taskDescription = fileMetaData.id.uuidString
+            downloadTask.resume()
+            activeDownloadsMap[fileMetaData.id] = downloadTask
+        }
     }
 }
 
@@ -75,7 +78,7 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
             percentComplete +=
             loadedTimeRange.duration.seconds / timeRangeExpectedToLoad.duration.seconds
         }
-        print("Downloading progress: \(percentComplete)")
+      
         if let id = getUUID(from: aggregateAssetDownloadTask) {
             delegate?.downloadingProgress(Float(percentComplete), for: id)
         }
@@ -85,6 +88,7 @@ extension AVAssetDownloadURLSessionClient: AVAssetDownloadDelegate {
         print("Download did complete with error: \(String(describing: error))")
         guard let assetDownloadTask = task as? AVAggregateAssetDownloadTask, let id = getUUID(from: assetDownloadTask) else { return }
         
+        activeDownloadsMap[id] = assetDownloadTask
         if let error = error {
             delegate?.didComplete(with: error, for: id)
         } else {

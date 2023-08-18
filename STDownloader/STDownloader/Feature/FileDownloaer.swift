@@ -37,14 +37,23 @@ class FileDownloader: NSObject, Downloader {
         downloadList.append(contentsOf: list)
         list.forEach { fileMetaData in
             createRange(from: fileMetaData)
+            updateFileDownload(from: fileMetaData.id)
+            if fileMetaData.state == .downloading {
+                resume(id: fileMetaData.id)
+            }
         }
     }
     
-    private func updateFileDownload(from id: UUID, with part: Int) {
-        if fileDownloads[id] == nil {
-            fileDownloads[id] = [part]
-        } else {
-            fileDownloads[id]?.append(part)
+    private func updateFileDownload(from id: UUID) {
+        guard let ranges = rangeRequests[id], !ranges.isEmpty else {
+            fileDownloads[id] = [0]
+            return
+        }
+        
+        var indexs = [Int]()
+        for (index, _) in ranges.enumerated() {
+            indexs.append(index)
+            fileDownloads[id] = indexs
         }
     }
     
@@ -52,6 +61,15 @@ class FileDownloader: NSObject, Downloader {
         downloadList.append(fileMetaData)
         createRange(from: fileMetaData)
         startDownload(from: fileMetaData)
+    }
+    
+    func pause(id: UUID) {
+        client.pause(id: id)
+    }
+    
+    func resume(id: UUID) {
+        let ranges = rangeRequests[id]
+        client.resume(id: id, with: ranges)
     }
     
     private func createRange(from fileMetaData: FileMetaData) {
@@ -101,9 +119,10 @@ class FileDownloader: NSObject, Downloader {
 
 extension FileDownloader: FileDownloadClientDelegate {
     func didComplete(with error: Swift.Error, for id: UUID, at part: Int) {
-        guard (error as NSError).code != NSURLErrorCancelled else { return }
         removeCompletePartDownload(id, part)
-        checkDownloadFinish(for: id)
+        if checkDownloadFinish(for: id) {
+            delegate?.didComplete(with: error, for: id)
+        }
     }
     
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int) {
@@ -118,11 +137,17 @@ extension FileDownloader: FileDownloadClientDelegate {
     func didFinishDownloading(to location: URL, for id: UUID, at part: Int) {
         moveFile(from: location, with: id, at: part)
         removeCompletePartDownload(id, part)
-        checkDownloadFinish(for: id)
+        if checkDownloadFinish(for: id) {
+            if numbersOfDownloadPart > 0{
+                mergeFile(for: id)
+            } else {
+                delegate?.didFinishDownloading(for: id)
+            }
+        }
     }
     
     func restoreDownloadSession(for id: UUID, part: Int) {
-        updateFileDownload(from: id, with: part)
+//        updateFileDownload(from: id, with: part)
     }
 }
 
@@ -139,13 +164,8 @@ extension FileDownloader {
         }
     }
     
-    private func checkDownloadFinish(for id: UUID) {
-        if fileDownloads.first(where: { $0.key == id})?.value.isEmpty == true {
-            debugPrint("Finish downloaded all parts of id \(id)")
-            if numbersOfDownloadPart > 0 {
-                mergeFile(for: id)
-            }
-        }
+    private func checkDownloadFinish(for id: UUID) -> Bool {
+        return fileDownloads.first(where: { $0.key == id})?.value.isEmpty == true
     }
     
     private func mergeFile(for id: UUID) {

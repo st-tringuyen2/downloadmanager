@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Downloader
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

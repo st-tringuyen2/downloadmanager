@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Downloader
 
 extension UserDefaults: DownloadStore {
     
@@ -51,6 +52,13 @@ extension UserDefaults: DownloadStore {
     func updateDownloadStatus(_ status: DownloadState, for fileID: UUID) {
         if var savedFile = getFileSaved(from: fileID) {
             savedFile.status = status
+            updateDownloadFile(savedFile)
+        }
+    }
+    
+    func updateDownloadLocation(_ location: URL, for fileID: UUID) {
+        if var savedFile = getFileSaved(from: fileID) {
+            savedFile.saveLocation = location
             updateDownloadFile(savedFile)
         }
     }

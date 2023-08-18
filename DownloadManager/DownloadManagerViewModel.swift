@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import Downloader
 
 struct FileSave: Codable {
     let id: UUID
     let name: String
     let size: Int
     let url: URL
-    let saveLocation: URL
+    var saveLocation: URL
     var progress: Float
     var status: DownloadState
 }
@@ -22,6 +23,7 @@ protocol DownloadStore {
     func saveDownloadFile(_ file: FileSave)
     func updateProgress(_ progress: Float, for fileID: UUID)
     func updateDownloadStatus(_ status: DownloadState, for fileID: UUID)
+    func updateDownloadLocation(_ location: URL, for fileID: UUID)
 }
 
 class DownloadManagerViewModel {
@@ -62,8 +64,8 @@ class DownloadManagerViewModel {
 
 extension DownloadManagerViewModel {
     func download(from fileMetaData: FileMetaData) {
-        downloader.download(from: fileMetaData)
         updateDownloadList(from: fileMetaData)
+        downloader.download(from: fileMetaData)
     }
     
     func updateDownloadList(from fileMetaData: FileMetaData) {
@@ -72,6 +74,14 @@ extension DownloadManagerViewModel {
         downloadList.insert(DownloadCellModel(id: fileMetaData.id.uuidString, fileName: fileMetaData.name, fileSize: fileSizeString, state: .downloading, progress: 0), at: 0)
         downloadStore.saveDownloadFile(FileSave(id: fileMetaData.id, name: fileMetaData.name, size: fileMetaData.size, url: fileMetaData.url, saveLocation: fileMetaData.saveLocation, progress: 0, status: .downloading))
     }
+    
+    func pause(from id: UUID) {
+        downloader.pause(id: id)
+    }
+  
+    func resume(from id: UUID) {
+        downloader.resume(id: id)
+    }
 }
 
 extension DownloadManagerViewModel: DownloadDelegate {
@@ -79,8 +89,25 @@ extension DownloadManagerViewModel: DownloadDelegate {
         return downloadList.firstIndex(where: { $0.id == id })
     }
     
+    func willDownloadTo(location: URL, for id: UUID) {
+        downloadStore.updateDownloadLocation(location, for: id)
+    }
+    
     func didComplete(with error: Error, for id: UUID) {
         print(error)
+        guard let downloadIndex = getIndex(for: id.uuidString) else { return }
+        
+        guard (error as NSError).code != NSURLErrorCancelled else {
+            DispatchQueue.main.async { [weak self] in
+                self?.updateStatus?(.pause, downloadIndex)
+            }
+            downloadStore.updateDownloadStatus(.pause, for: id)
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.updateStatus?(.failed, downloadIndex)
+        }
         downloadStore.updateDownloadStatus(.failed, for: id)
     }
     
@@ -96,5 +123,10 @@ extension DownloadManagerViewModel: DownloadDelegate {
     func didFinishDownloading(for id: UUID) {
         print("finish download for id: \(id)")
         downloadStore.updateDownloadStatus(.downloaded, for: id)
+        if let downloadIndex = getIndex(for: id.uuidString) {
+            DispatchQueue.main.async { [weak self] in
+                self?.updateStatus?(.downloaded, downloadIndex)
+            }
+        }
     }
 }

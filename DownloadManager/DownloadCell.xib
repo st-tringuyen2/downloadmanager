@@ -65,6 +65,9 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="play.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="onPauseResumeTapped" destination="8xQ-ow-lLT" eventType="touchUpInside" id="9ds-Kt-Id9"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QPf-ii-XOf">
                                 <rect key="frame" x="331" y="5.6666666666666661" width="30" height="25.666666666666671"/>
@@ -74,6 +77,9 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="xmark.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="onCancelTapped" destination="8xQ-ow-lLT" eventType="touchUpInside" id="Kob-oO-K2S"/>
+                                </connections>
                             </button>
                         </subviews>
                     </stackView>

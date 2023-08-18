@@ -8,14 +8,6 @@
 import Foundation
 
 class HLSDownloader: Downloader {
-    func pause(file: FileMetaData) {
-        
-    }
-    
-    func resume(file: FileMetaData) {
-        
-    }
-    
     var delegate: DownloadDelegate?
     
     private var downloadList = [FileMetaData]()
@@ -32,8 +24,21 @@ class HLSDownloader: Downloader {
         downloadList.append(fileMetaData)
     }
     
+    func pause(id: UUID) {
+        client.pause(id: id)
+    }
+    
+    func resume(id: UUID) {
+        client.resume(id: id)
+    }
+    
     func updateDownloadList(_ list: [FileMetaData]) {
         downloadList.append(contentsOf: list)
+        list.forEach { fileMetaData in
+            if fileMetaData.state == .downloading {
+                self.client.resume(fileMetaData: fileMetaData)
+            }
+        }
     }
 }
 
@@ -41,6 +46,7 @@ extension HLSDownloader: HLSDownloadClientDelegate {
     func willDownload(to location: URL, for id: UUID) {
         if let index = downloadList.firstIndex(where:  { $0.id == id }) {
             downloadList[index].saveLocation = location
+            delegate?.willDownloadTo(location: location, for: id)
         }
     }
     

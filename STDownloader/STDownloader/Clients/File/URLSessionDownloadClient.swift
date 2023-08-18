@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 protocol FileDownloadClientDelegate: AnyObject {
     func didComplete(with error: Error, for id: UUID, at part: Int)
     func downloadingProgress(_ progress: Float, for id: UUID, at part: Int)
@@ -15,6 +16,9 @@ protocol FileDownloadClientDelegate: AnyObject {
 }
 
 class URLSessionDownloadClient: NSObject, FileDownloadClient {
+    
+    struct ResumeError: Error {}
+    
     private var activeDownloadsMap = [UUID: [Int: URLSessionDownloadTask]]()
     private var resumeData = [UUID: [Int: Data]]()
 
@@ -35,16 +39,7 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
     private func restoreDownloadSession() {
         session.getAllTasks { [weak self] tasks in
             tasks.forEach { task in
-                if let error = task.error as? NSError {
-                    let userInfo = error.userInfo
-                    if let downloadTask = task as? URLSessionDownloadTask, let resumeData = userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
-                        if let (id, part) = self?.createUUIDAndPart(from: downloadTask) {
-                            self?.updateActiveDownloadTask(id, part, downloadTask)
-                            self?.updateResumeData(id, resumeData, part)
-                            self?.delegate?.restoreDownloadSession(for: id, part: part)
-                        }
-                    }
-                } else if let downloadTask = task as? URLSessionDownloadTask, let (id, part) = self?.createUUIDAndPart(from: downloadTask) {
+                if let downloadTask = task as? URLSessionDownloadTask, let (id, part) = self?.createUUIDAndPart(from: downloadTask) {
                     self?.updateActiveDownloadTask(id, part, downloadTask)
                     self?.delegate?.restoreDownloadSession(for: id, part: part)
                 }
@@ -91,14 +86,45 @@ class URLSessionDownloadClient: NSObject, FileDownloadClient {
         downloadTask.resume()
         updateActiveDownloadTask(fileMetaData.id, part, downloadTask)
     }
+    
+    func pause(id: UUID) {
+        if let activateDownload = activeDownloadsMap[id] {
+            for (_, task) in activateDownload {
+                task.cancel()
+            }
+        }
+    }
+    
+    func resume(id: UUID, with ranges: [HTTPRangeRequestHeader]?) {
+        if let resumeData = resumeData[id] {
+            for (index, data) in resumeData {
+                let task = session.downloadTask(withResumeData: data)
+                task.resume()
+                updateActiveDownloadTask(id, index, task)
+            }
+        } else {
+            if let ranges = ranges, !ranges.isEmpty {
+                for (index, _) in ranges.enumerated() {
+                    delegate?.didComplete(with: ResumeError(), for: id, at: index)
+                }
+            } else {
+                delegate?.didComplete(with: ResumeError(), for: id, at: 0)
+            }
+        }
+    }
 }
 
 extension URLSessionDownloadClient: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let (uuid, part) = createUUIDAndPart(from: task), let error = error {
-            delegate?.didComplete(with: error, for: uuid, at: part)
+        guard let error = error as? NSError, let (uuid, part) = createUUIDAndPart(from: task) else { return }
+        
+        let userInfo = (error as NSError).userInfo
+        if let resumeData = userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
+            updateResumeData(uuid, resumeData, part)
         }
+        
+        delegate?.didComplete(with: error, for: uuid, at: part)
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
@@ -114,4 +140,37 @@ extension URLSessionDownloadClient: URLSessionDownloadDelegate {
             delegate?.downloadingProgress(calculatedProgress, for: uuid, at: part)
         }
     }
+}
+
+
+class URLSessionHTTPClient: HTTPClient {
+    private var session: URLSession
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
+    
+    func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        session.dataTask(with: request) { data, response, error in
+            if let data = data, let response = response as? HTTPURLResponse {
+                completion(.success((data, response)))
+                return
+            }
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+        }.resume()
+    }
+}
+
+enum HTTPMethod: String {
+    case GET
+    case HEAD
+}
+
+protocol HTTPClient {
+    func get(from url: URL, with method: HTTPMethod, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void)
 }

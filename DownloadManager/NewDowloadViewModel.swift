@@ -55,6 +55,7 @@ class NewDowloadViewModel {
         case connectivity
         case invalidData
         case unsupportedURL
+        case failedToCreateFile
         
         var localizedDescription: String {
             var description = ""
@@ -62,6 +63,7 @@ class NewDowloadViewModel {
             case .connectivity: description = "Can not request data"
             case .invalidData: description = "Meta data is invalid"
             case .unsupportedURL: description = "System does not support download this content"
+            case .failedToCreateFile: description = "System does not support to create file"
             }
             
             return description
@@ -114,6 +116,8 @@ class NewDowloadViewModel {
             let fileMetaData = FileMetaData(id: UUID(), url: downloadURL, name: fileLocation.lastPathComponent, size: Int(response.expectedContentLength), saveLocation: fileLocation, state: .notDownload)
 
             completion(.success(fileMetaData))
+        } else {
+            completion(.failure(.failedToCreateFile))
         }
     }
 }

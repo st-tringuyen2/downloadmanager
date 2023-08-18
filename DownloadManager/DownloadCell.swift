@@ -32,6 +32,17 @@ class DownloadCell: UITableViewCell {
     @IBOutlet private var startPauseButton: UIButton!
     @IBOutlet private var cancelButton: UIButton!
     
+    var onCancelDownload: (() -> Void)?
+    var onPauseResumeDownload: (() -> Void)?
+    
+    @IBAction private func onCancelTapped() {
+        onCancelDownload?()
+    }
+    
+    @IBAction private func onPauseResumeTapped() {
+        onPauseResumeDownload?()
+    }
+    
     func updateUI(with model: DownloadCellModel) {
         fileNameLabel.text = model.fileName
         fileSizeLabel.text = model.fileSize
