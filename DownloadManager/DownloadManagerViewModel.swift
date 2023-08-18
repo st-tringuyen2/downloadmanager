@@ -31,7 +31,7 @@ class DownloadManagerViewModel {
             return DownloadCellModel(id: fileSaved.id.uuidString, fileName: fileSaved.name, fileSize: fileSizeString, state: fileSaved.status, progress: fileSaved.progress)
         })
         
-        let listFileMetaData = listDownloadSaved.map({ FileMetaData(id: $0.id, url: $0.url, name: $0.name, size: $0.size, saveLocation: $0.saveLocation, state: $0.status)})
+        let listFileMetaData = listDownloadSaved.map({ FileMetaData(id: $0.id, url: $0.url, name: $0.name, size: $0.size, type: $0.type, saveLocation: $0.saveLocation, state: $0.status)})
         downloader.updateDownloadList(listFileMetaData)
     }
 
@@ -54,7 +54,7 @@ extension DownloadManagerViewModel {
         let fileSize: Float = Float(fileMetaData.size / 1024 / 1024)
         let fileSizeString = "\(fileSize) MB"
         downloadList.insert(DownloadCellModel(id: fileMetaData.id.uuidString, fileName: fileMetaData.name, fileSize: fileSizeString, state: .downloading, progress: 0), at: 0)
-        downloadStore.saveDownloadFile(FileSave(id: fileMetaData.id, name: fileMetaData.name, size: fileMetaData.size, url: fileMetaData.url, saveLocation: fileMetaData.saveLocation, progress: 0, status: .downloading))
+        downloadStore.saveDownloadFile(FileSave(id: fileMetaData.id, name: fileMetaData.name, size: fileMetaData.size, type: fileMetaData.type, url: fileMetaData.url, saveLocation: fileMetaData.saveLocation, progress: 0, status: .downloading))
     }
     
     func pause(from id: UUID) {

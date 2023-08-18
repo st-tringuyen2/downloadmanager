@@ -42,7 +42,7 @@
 /* Begin PBXFileReference section */
 		E43ED50C2A77BF730075D1D6 /* DownloadManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloadManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E43ED50F2A77BF730075D1D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E43ED5112A77BF730075D1D6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		E43ED5112A77BF730075D1D6 /* SceneDelegate.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E43ED5132A77BF730075D1D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E43ED5182A77BF750075D1D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E43ED51B2A77BF750075D1D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -53,7 +53,7 @@
 		E43ED52B2A77C8780075D1D6 /* DownloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		E43ED52E2A77E9330075D1D6 /* NewDownloadViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewDownloadViewController.xib; sourceTree = "<group>"; };
 		E43ED5302A77E9A90075D1D6 /* NewDownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDownloadViewController.swift; sourceTree = "<group>"; };
-		E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewModel.swift; sourceTree = "<group>"; };
+		E43ED5332A7898F40075D1D6 /* DownloadManagerViewModel.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = DownloadManagerViewModel.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E43ED5362A789CB00075D1D6 /* DownloadManagerComposer.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = DownloadManagerComposer.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4CC5CA22A8FAB9100112CD4 /* Downloader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Downloader.framework; sourceTree = BUILT_PRODUCTS_DIR; };

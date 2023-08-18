@@ -17,10 +17,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let client = AVAssetDownloadURLSessionClient()
-        let downloader = HLSDownloader(client: client)
-        client.delegate = downloader
-        let downloadManagerViewController = DownloadManagerComposer.makeDownloadManagerViewController(downloader: downloader)
+        let hlsClient = AVAssetDownloadURLSessionClient()
+        let hlsDownloader = HLSDownloader(client: hlsClient)
+        hlsClient.delegate = hlsDownloader
+        
+        let fileClient = URLSessionDownloadClient()
+        let fileDownloader = FileDownloader(client: fileClient)
+        fileClient.delegate = fileDownloader
+        
+        let internetDownloader = InternetDownloader(fileDownloader: fileDownloader, hlsDownloader: hlsDownloader)
+        fileDownloader.delegate = internetDownloader
+        hlsDownloader.delegate = internetDownloader
+        let downloadManagerViewController = DownloadManagerComposer.makeDownloadManagerViewController(downloader: internetDownloader)
         navigationController = UINavigationController(rootViewController: downloadManagerViewController)
         
         window?.rootViewController = navigationController

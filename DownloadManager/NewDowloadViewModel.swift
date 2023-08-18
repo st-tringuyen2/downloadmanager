@@ -70,9 +70,21 @@ class NewDowloadViewModel {
             completion(.failure(.unsupportedURL))
             return
         }
+        
+        var type: FileType
+        // Type HLS reference:  https://developer.apple.com/documentation/http-live-streaming/deploying-a-basic-http-live-streaming-hls-stream#Configure-a-web-server
+        if response.mimeType?.contains("mpegurl") == true
+            || response.mimeType?.contains("mpt2") == true
+            || response.mimeType?.contains("mp4") == true
+            || response.suggestedFilename?.contains("m3u8") == true
+        {
+            type = .hls
+        } else {
+            type = .file
+        }
         let fileName = response.suggestedFilename ?? "Unknow"
         if let fileLocation = createEmptyFile(with: fileName), let downloadURL = downloadURL {
-            let fileMetaData = FileMetaData(id: UUID(), url: downloadURL, name: fileLocation.lastPathComponent, size: Int(response.expectedContentLength), saveLocation: fileLocation, state: .notDownload)
+            let fileMetaData = FileMetaData(id: UUID(), url: downloadURL, name: fileLocation.lastPathComponent, size: Int(response.expectedContentLength), type: type, saveLocation: fileLocation, state: .notDownload)
 
             completion(.success(fileMetaData))
         } else {

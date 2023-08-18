@@ -12,19 +12,26 @@ public struct FileMetaData {
     public let url: URL
     public let name: String
     public let size: Int
+    public var type: FileType
     public var saveLocation: URL
     public var state: DownloadState
     public var progress: Float?
     
-    public init(id: UUID, url: URL, name: String, size: Int, saveLocation: URL, state: DownloadState, progress: Float? = nil) {
+    public init(id: UUID, url: URL, name: String, size: Int, type: FileType, saveLocation: URL, state: DownloadState, progress: Float? = nil) {
         self.id = id
         self.url = url
         self.name = name
         self.size = size
+        self.type = type
         self.saveLocation = saveLocation
         self.state = state
         self.progress = progress
     }
+}
+
+public enum FileType: Int, Codable {
+    case file = 0
+    case hls
 }
 
 public enum DownloadState: Int, Codable {
