@@ -49,7 +49,7 @@
 		E488ABCB2A78B518003DAEBF /* NewDowloadViewModel.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = NewDowloadViewModel.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4A05B2F2A809301002928C0 /* HLSDownloader.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = HLSDownloader.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4CA3C852A83245A00D2A611 /* HLSDownloadClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HLSDownloadClient.swift; sourceTree = "<group>"; };
-		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		E4D5A51C2A793B10002314C7 /* Downloader.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4D5A51E2A793B3D002314C7 /* FileDownloader.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4D5A5212A795A5F002314C7 /* URLSessionDownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };
 		E4D5A5232A795AB2002314C7 /* FileDownloadClient.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadClient.swift; sourceTree = "<group>"; tabWidth = 4; };

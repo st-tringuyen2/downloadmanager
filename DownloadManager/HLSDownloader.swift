@@ -8,6 +8,14 @@
 import Foundation
 
 class HLSDownloader: Downloader {
+    func pause(file: FileMetaData) {
+        
+    }
+    
+    func resume(file: FileMetaData) {
+        
+    }
+    
     var delegate: DownloadDelegate?
     
     private var downloadList = [FileMetaData]()

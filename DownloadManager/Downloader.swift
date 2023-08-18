@@ -16,5 +16,7 @@ protocol DownloadDelegate: AnyObject {
 protocol Downloader {
     var delegate: DownloadDelegate? { get set }
     func download(from fileMetaData: FileMetaData)
+    func pause(file: FileMetaData)
+    func resume(file: FileMetaData)
     func updateDownloadList(_ list: [FileMetaData])
 }
