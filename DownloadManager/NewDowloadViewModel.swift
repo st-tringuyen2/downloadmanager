@@ -74,8 +74,6 @@ class NewDowloadViewModel {
         var type: FileType
         // Type HLS reference:  https://developer.apple.com/documentation/http-live-streaming/deploying-a-basic-http-live-streaming-hls-stream#Configure-a-web-server
         if response.mimeType?.contains("mpegurl") == true
-            || response.mimeType?.contains("mpt2") == true
-            || response.mimeType?.contains("mp4") == true
             || response.suggestedFilename?.contains("m3u8") == true
         {
             type = .hls
